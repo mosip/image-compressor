@@ -31,15 +31,10 @@ public class SDKInfoService extends SDKService {
 	public SDKInfo getSDKInfo() {
 		SDKInfo sdkInfo = new SDKInfo(this.apiVersion, this.sample1, this.sample2, this.sample3);
 		List<BiometricType> supportedModalities = new ArrayList<>();
-		supportedModalities.add(BiometricType.FINGER);
 		supportedModalities.add(BiometricType.FACE);
-		supportedModalities.add(BiometricType.IRIS);
 		sdkInfo.setSupportedModalities(supportedModalities);
 		Map<BiometricFunction, List<BiometricType>> supportedMethods = new HashMap<>();
-		supportedMethods.put(BiometricFunction.MATCH, supportedModalities);
-		supportedMethods.put(BiometricFunction.QUALITY_CHECK, supportedModalities);
 		supportedMethods.put(BiometricFunction.EXTRACT, supportedModalities);
-		supportedMethods.put(BiometricFunction.CONVERT_FORMAT, supportedModalities);
 		sdkInfo.setSupportedMethods(supportedMethods);
 		return sdkInfo;
 	}
