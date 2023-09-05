@@ -157,9 +157,6 @@ public class ImageCompressionService extends SDKService {
 
 		// standard calculation for image size width = 498 and height = 640 is 0.25f
 		// Scaling the Image using Resize function
-		int stdWidth = 498;
-		int stdHeight = 640;
-
 		float fxOrginal = 0.25f;
 		float fyOrginal = 0.25f;
 		int compression = 50;
@@ -170,17 +167,10 @@ public class ImageCompressionService extends SDKService {
 			compression = this.getEnv().getProperty(SdkConstant.IMAGE_COMPRESSOR_COMPRESSION_RATIO, Integer.class, 50);
 		}
 
-		float fx = fxOrginal;
-		float fy = fyOrginal;
-		if (src.width() != stdWidth || src.height() != stdHeight)
-		{
-			fx = (fxOrginal * (stdWidth / src.width()));
-			fy = (fyOrginal * (stdHeight / src.height()));
-			LOGGER.info("factor ratio Details");
-			LOGGER.info(String.format("orginal fx=%.2f, orginal fy=%.2f, fx==%.2f, fy==%.2f ", fxOrginal, fyOrginal, fx, fy));
-		}
+		LOGGER.info("Factor ratio Details");
+		LOGGER.info(String.format("orginal fx=%.2f, orginal fy=%.2f, Compression Ratio==%.2f ", fxOrginal, fyOrginal, compression));
 		
-		Imgproc.resize(src, dst, new Size(0, 0), fx, fy, Imgproc.INTER_AREA);
+		Imgproc.resize(src, dst, new Size(0, 0), fxOrginal, fyOrginal, Imgproc.INTER_AREA);
 		LOGGER.info("Resized Image Details");
 		LOGGER.info(String.format("Width=%d, Height=%d, Total Size=%d ", dst.width(), dst.height(), (dst.width() * dst.height())));
 
@@ -190,7 +180,7 @@ public class ImageCompressionService extends SDKService {
 		byte[] data = mem.toArray();
 		
 		LOGGER.info("Compressed Image Details");
-		LOGGER.info(String.format("length==%d ", data.length));
+		LOGGER.info(String.format("Image length==%d ", data.length));
 
 		return data;
 	}
