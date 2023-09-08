@@ -71,7 +71,7 @@
 
 		<!-- Mosip kernel -->
 		<kernel.version>1.2.0.1-SNAPSHOT</kernel.version>
-		<kernel.biometricsdk.version>1.2.0.1-B2</kernel.biometricsdk.version>
+		<kernel.biometrics.api.version>1.2.0.1-B2</kernel.biometrics.api.version>
 		<biometrics-util.version>1.2.0.1-B2-SNAPSHOT</biometrics-util.version>
 
 		<!-- slf4j -->
@@ -97,7 +97,8 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-biometrics-api</artifactId>
-			<version>${kernel.biometricsdk.version}</version>
+			<version>${kernel.biometrics.api.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.biometric.util</groupId>
