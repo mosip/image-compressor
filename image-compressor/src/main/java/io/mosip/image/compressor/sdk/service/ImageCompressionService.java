@@ -11,6 +11,7 @@ import org.opencv.core.MatOfInt;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +88,9 @@ public class ImageCompressionService extends SDKService {
 						// Update the fingerprint image to fingerprint minutiae type
 						if (type != null && type.equals(String.valueOf(FORMAT_TYPE_FACE))) {
 							// do actual resize and compression .. create the face ISO ISO19794_5_2011
-							segment.setBdb(Base64.getEncoder().encode(doFaceConversion("REGISTRATION", resizeAndCompress(faceBdb))));
+							byte[] data = doFaceConversion("REGISTRATION", resizeAndCompress(faceBdb));
+							segment.setBdb(Base64.getEncoder().encode(data));
+							//LOGGER.debug(Base64.getEncoder().encodeToString(data));
 						}
 					}
 				}
@@ -168,7 +171,7 @@ public class ImageCompressionService extends SDKService {
 		}
 
 		LOGGER.info("Factor ratio Details");
-		LOGGER.info(String.format("orginal fx=%.2f, orginal fy=%.2f, Compression Ratio==%.2f ", fxOrginal, fyOrginal, compression));
+		LOGGER.info(String.format("orginal fx=%.2f, orginal fy=%.2f, Compression Ratio==%d ", fxOrginal, fyOrginal, compression));
 		
 		Imgproc.resize(src, dst, new Size(0, 0), fxOrginal, fyOrginal, Imgproc.INTER_AREA);
 		LOGGER.info("Resized Image Details");
