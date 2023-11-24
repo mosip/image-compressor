@@ -148,9 +148,7 @@ public abstract class SDKService {
 				responseStatus = ResponseStatus.INVALID_INPUT;
 				throw new SDKException(responseStatus.getStatusCode() + "", responseStatus.getStatusMessage());
 			}
-			System.out.println(bioData);
 			FaceBDIR bdir = FaceDecoder.getFaceBDIR(requestDto);
-
 			return bdir.getImage();
 		} catch (Exception ex) {
 			ex.printStackTrace();

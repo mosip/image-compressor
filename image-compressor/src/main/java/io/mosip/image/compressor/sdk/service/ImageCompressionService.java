@@ -61,7 +61,10 @@ public class ImageCompressionService extends SDKService {
 		this.modalitiesToExtract = modalitiesToExtract;
 	}
 
-	public Response<BiometricRecord> getExtractTemplateInfo() {
+	public Response<BiometricRecord> getExtractTemplateInfo() {		
+		LOGGER.info("ExtractTemplateInfo :: Started :::::::::::::::::::: ");
+		LOGGER.info("ExtractTemplateInfo :: Request :: " + sample != null ? sample.toString() : null);
+
 		ResponseStatus responseStatus = null;
 		Response<BiometricRecord> response = new Response<>();
 		try {
@@ -71,13 +74,20 @@ public class ImageCompressionService extends SDKService {
 			}
 
 			for (BIR segment : sample.getSegments()) {
-				// not validating ISO
+				/*
+				 * Can do ISO validation here
+				 */
 				byte[] faceBdb = getBirData(segment);
 
+				/*
+				 * Below Code can be removed if we require PayLoad information 
+				 */
+				/*
 				if (segment.getBirInfo() == null)
 					segment.setBirInfo(new BIRInfo(new BIRInfoBuilder().withPayload(segment.getBdb())));
 				else 
 					segment.getBirInfo().setPayload(segment.getBdb());
+				*/
 				
 				BDBInfo bdbInfo = segment.getBdbInfo();
 				if (bdbInfo != null) {
@@ -90,7 +100,6 @@ public class ImageCompressionService extends SDKService {
 							// do actual resize and compression .. create the face ISO ISO19794_5_2011
 							byte[] data = doFaceConversion("REGISTRATION", resizeAndCompress(faceBdb));
 							segment.setBdb(Base64.getEncoder().encode(data));
-							//LOGGER.debug(Base64.getEncoder().encodeToString(data));
 						}
 					}
 				}
@@ -145,6 +154,9 @@ public class ImageCompressionService extends SDKService {
 		}
 		response.setStatusCode(ResponseStatus.SUCCESS.getStatusCode());
 		response.setResponse(sample);
+
+		LOGGER.info("ExtractTemplateInfo :: Response :: " + response != null ? response.toString() : null);
+		LOGGER.info("ExtractTemplateInfo :: Ended :::::::::::::::::::: ");
 		return response;
 	}
 
@@ -152,8 +164,7 @@ public class ImageCompressionService extends SDKService {
 		// Storing the image in a Matrix object
 		// of Mat type
 		Mat src = Imgcodecs.imdecode(new MatOfByte(jp2000Bytes), Imgcodecs.IMREAD_UNCHANGED);
-		LOGGER.info("Orginal Image Details");
-		LOGGER.info(String.format("Width=%d, Height=%d, Total Size=%d ", src.width(), src.height(), (src.width() * src.height())));
+		LOGGER.info("Orginal Image Details :: " + String.format("Width=%d, Height=%d, Total Size=%d ", src.width(), src.height(), (src.width() * src.height())));
 		// New matrix to store the final image
 		// where the input image is supposed to be written
 		Mat dst = new Mat();
@@ -170,20 +181,17 @@ public class ImageCompressionService extends SDKService {
 			compression = this.getEnv().getProperty(SdkConstant.IMAGE_COMPRESSOR_COMPRESSION_RATIO, Integer.class, 50);
 		}
 
-		LOGGER.info("Factor ratio Details");
-		LOGGER.info(String.format("orginal fx=%.2f, orginal fy=%.2f, Compression Ratio==%d ", fxOrginal, fyOrginal, compression));
+		LOGGER.info("Factor ratio Details :: " + String.format("orginal fx=%.2f, orginal fy=%.2f, Compression Ratio==%d ", fxOrginal, fyOrginal, compression));
 		
 		Imgproc.resize(src, dst, new Size(0, 0), fxOrginal, fyOrginal, Imgproc.INTER_AREA);
-		LOGGER.info("Resized Image Details");
-		LOGGER.info(String.format("Width=%d, Height=%d, Total Size=%d ", dst.width(), dst.height(), (dst.width() * dst.height())));
+		LOGGER.info("Resized Image Details :: " + String.format("Width=%d, Height=%d, Total Size=%d ", dst.width(), dst.height(), (dst.width() * dst.height())));
 
 		MatOfInt map = new MatOfInt(Imgcodecs.IMWRITE_JPEG2000_COMPRESSION_X1000, compression);
 		MatOfByte mem = new MatOfByte();
 		Imgcodecs.imencode(".jp2", dst, mem, map);
 		byte[] data = mem.toArray();
 		
-		LOGGER.info("Compressed Image Details");
-		LOGGER.info(String.format("Image length==%d ", data.length));
+		LOGGER.info("Compressed Image Details :: " + String.format("Image length==%d ", data.length));
 
 		return data;
 	}
@@ -201,7 +209,8 @@ public class ImageCompressionService extends SDKService {
 				requestDto.setImageType(0);//0 = jp2, 1 = wsq
 				requestDto.setInputBytes(imageData);
 
-				return FaceEncoder.convertFaceImageToISO(requestDto);// get image quality = 40 by default
+				// get image quality = 40 by default
+				return FaceEncoder.convertFaceImageToISO(requestDto);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
