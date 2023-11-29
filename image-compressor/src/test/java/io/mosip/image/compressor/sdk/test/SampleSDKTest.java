@@ -51,10 +51,11 @@ public class SampleSDKTest {
             if (response != null && response.getResponse() != null)
             {
             	BiometricRecord compressed_record = response.getResponse();
-                System.out.println("==================Response==================");
-                System.out.println(compressed_record.toString());
+            	LOGGER.info("Response {}", compressed_record.toString());
 
-                Assert.assertEquals("Should be Intermediate", compressed_record.getSegments().get(0).getBdbInfo().getLevel().toString(), ProcessedLevelType.RAW.toString());
+                Assert.assertEquals("Should be Raw", compressed_record.getSegments().get(0).getBdbInfo().getLevel().toString(), ProcessedLevelType.RAW.toString());
+                
+                LOGGER.info("BDB base64 encoded {}", Base64.getEncoder().encodeToString(compressed_record.getSegments().get(0).getBdb()));
             }
         } catch (ParserConfigurationException e) {
             e.printStackTrace();

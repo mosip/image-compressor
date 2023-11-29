@@ -33,19 +33,19 @@ import io.mosip.image.compressor.sdk.exceptions.SDKException;
 
 public class ImageCompressionService extends SDKService {
 	private Logger LOGGER = LoggerFactory.getLogger(ImageCompressionService.class);
-	
+
 	static {
 		// load OpenCV library
 		nu.pattern.OpenCV.loadShared();
 		/**
-         * In Java >= 12 it is no longer possible to use addLibraryPath, which modifies the
-         * ClassLoader's static usr_paths field. There does not seem to be any way around this
-         * so we fall back to loadLocally() and return.
-         */
-		//nu.pattern.OpenCV.loadLocally();
+		 * In Java >= 12 it is no longer possible to use addLibraryPath, which modifies
+		 * the ClassLoader's static usr_paths field. There does not seem to be any way
+		 * around this so we fall back to loadLocally() and return.
+		 */
+		// nu.pattern.OpenCV.loadLocally();
 		System.loadLibrary(org.opencv.core.Core.NATIVE_LIBRARY_NAME);
 	}
-	
+
 	private BiometricRecord sample;
 	private List<BiometricType> modalitiesToExtract;
 
@@ -61,8 +61,8 @@ public class ImageCompressionService extends SDKService {
 		this.modalitiesToExtract = modalitiesToExtract;
 	}
 
-	public Response<BiometricRecord> getExtractTemplateInfo() {		
-		LOGGER.info("ExtractTemplateInfo :: Started Request :: " + sample != null ? sample.toString() : null);
+	public Response<BiometricRecord> getExtractTemplateInfo() {
+		LOGGER.info("ExtractTemplateInfo :: Started Request :: {}", sample != null ? sample.toString() : null);
 
 		ResponseStatus responseStatus = null;
 		Response<BiometricRecord> response = new Response<>();
@@ -79,18 +79,17 @@ public class ImageCompressionService extends SDKService {
 				byte[] faceBdb = getBirData(segment);
 
 				/*
-				 * Below Code can be removed if we require PayLoad information 
+				 * Below Code can be removed if we require PayLoad information
 				 */
 				/*
-				if (segment.getBirInfo() == null)
-					segment.setBirInfo(new BIRInfo(new BIRInfoBuilder().withPayload(segment.getBdb())));
-				else 
-					segment.getBirInfo().setPayload(segment.getBdb());
-				*/
-				
+				 * if (segment.getBirInfo() == null) segment.setBirInfo(new BIRInfo(new
+				 * BIRInfoBuilder().withPayload(segment.getBdb()))); else
+				 * segment.getBirInfo().setPayload(segment.getBdb());
+				 */
+
 				BDBInfo bdbInfo = segment.getBdbInfo();
 				if (bdbInfo != null) {
-					// Update the level to processed
+					// Update the level to RAW
 					bdbInfo.setLevel(getProcessedLevelType());
 					if (segment.getBdbInfo().getFormat() != null) {
 						String type = segment.getBdbInfo().getFormat().getType();
@@ -98,7 +97,10 @@ public class ImageCompressionService extends SDKService {
 						if (type != null && type.equals(String.valueOf(FORMAT_TYPE_FACE))) {
 							// do actual resize and compression .. create the face ISO ISO19794_5_2011
 							byte[] data = doFaceConversion("REGISTRATION", resizeAndCompress(faceBdb));
-							segment.setBdb(Base64.getEncoder().encode(data));
+							segment.setBdb(data);
+						} else {
+							throw new SDKException(ResponseStatus.INVALID_INPUT.toString(),
+									String.format(" FORMAT_TYPE_FACE is wrong ! Excepected Value is 8, Received is %s", type));
 						}
 					}
 				}
@@ -154,7 +156,7 @@ public class ImageCompressionService extends SDKService {
 		response.setStatusCode(ResponseStatus.SUCCESS.getStatusCode());
 		response.setResponse(sample);
 
-		LOGGER.info("ExtractTemplateInfo :: End Response :: ", response != null ? response.toString() : null);
+		LOGGER.info("ExtractTemplateInfo :: End Response :: {}", response != null ? response.toString() : null);
 		return response;
 	}
 
@@ -162,7 +164,8 @@ public class ImageCompressionService extends SDKService {
 		// Storing the image in a Matrix object
 		// of Mat type
 		Mat src = Imgcodecs.imdecode(new MatOfByte(jp2000Bytes), Imgcodecs.IMREAD_UNCHANGED);
-		LOGGER.info("Orginal Image Details :: Width {} Height {} Total Size {}", src.width(), src.height(), (src.width() * src.height()));
+		LOGGER.info("Orginal Image Details :: Width {} Height {} Total Size {}", src.width(), src.height(),
+				(src.width() * src.height()));
 		// New matrix to store the final image
 		// where the input image is supposed to be written
 		Mat dst = new Mat();
@@ -172,23 +175,24 @@ public class ImageCompressionService extends SDKService {
 		float fxOrginal = 0.25f;
 		float fyOrginal = 0.25f;
 		int compression = 50;
-		if (this.getEnv() != null)
-		{
+		if (this.getEnv() != null) {
 			fxOrginal = this.getEnv().getProperty(SdkConstant.IMAGE_COMPRESSOR_RESIZE_FACTOR_FX, Float.class, 0.25f);
 			fyOrginal = this.getEnv().getProperty(SdkConstant.IMAGE_COMPRESSOR_RESIZE_FACTOR_FY, Float.class, 0.25f);
 			compression = this.getEnv().getProperty(SdkConstant.IMAGE_COMPRESSOR_COMPRESSION_RATIO, Integer.class, 50);
 		}
 
-		LOGGER.info("Factor ratio Details :: {} ", String.format("orginal fx=%.2f, orginal fy=%.2f, Compression Ratio==%d ", fxOrginal, fyOrginal, compression));
-		
+		LOGGER.info("Factor ratio Details :: {} ", String
+				.format("orginal fx=%.2f, orginal fy=%.2f, Compression Ratio==%d ", fxOrginal, fyOrginal, compression));
+
 		Imgproc.resize(src, dst, new Size(0, 0), fxOrginal, fyOrginal, Imgproc.INTER_AREA);
-		LOGGER.info("Resized Image Details :: Width {} Height {} Total Size {}", dst.width(), dst.height(), (dst.width() * dst.height()));
+		LOGGER.info("Resized Image Details :: Width {} Height {} Total Size {}", dst.width(), dst.height(),
+				(dst.width() * dst.height()));
 
 		MatOfInt map = new MatOfInt(Imgcodecs.IMWRITE_JPEG2000_COMPRESSION_X1000, compression);
 		MatOfByte mem = new MatOfByte();
 		Imgcodecs.imencode(".jp2", dst, mem, map);
 		byte[] data = mem.toArray();
-		
+
 		LOGGER.info("Compressed Image Details :: Image length {}", data.length);
 
 		return data;
@@ -204,7 +208,7 @@ public class ImageCompressionService extends SDKService {
 
 			// Convert JP2000 to Face ISO/IEC 19794-5: 2011
 			if (imageData != null) {
-				requestDto.setImageType(0);//0 = jp2, 1 = wsq
+				requestDto.setImageType(0);// 0 = jp2, 1 = wsq
 				requestDto.setInputBytes(imageData);
 
 				// get image quality = 40 by default
