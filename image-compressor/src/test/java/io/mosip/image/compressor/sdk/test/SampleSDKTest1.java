@@ -33,7 +33,7 @@ import io.mosip.kernel.biometrics.entities.VersionType;
 import io.mosip.kernel.biometrics.model.Response;
 
 public class SampleSDKTest1 {
-    Logger LOGGER = LoggerFactory.getLogger(SampleSDKTest.class);
+    Logger LOGGER = LoggerFactory.getLogger(SampleSDKTest1.class);
 
     private static String sampleFace = "";
 
@@ -44,7 +44,7 @@ public class SampleSDKTest1 {
 	}
 
 	 public void Setup() {
-		 sampleFace = SampleSDKTest.class.getResource("/sample_files/sample_face.xml").getPath();
+		 sampleFace = SampleSDKTest1.class.getResource("/sample_files/sample_face.xml").getPath();
     }
 	 
     public void test_face() {
@@ -61,7 +61,7 @@ public class SampleSDKTest1 {
             if (response != null && response.getResponse() != null)
             {
             	BiometricRecord compressed_record = response.getResponse();
-                Assert.assertEquals("Should be Intermediate", compressed_record.getSegments().get(0).getBdbInfo().getLevel().toString(), ProcessedLevelType.RAW.toString());
+                Assert.assertEquals("Should be Raw", compressed_record.getSegments().get(0).getBdbInfo().getLevel().toString(), ProcessedLevelType.RAW.toString());
             }
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
