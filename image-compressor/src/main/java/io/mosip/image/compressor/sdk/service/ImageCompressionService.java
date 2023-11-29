@@ -89,7 +89,7 @@ public class ImageCompressionService extends SDKService {
 
 				BDBInfo bdbInfo = segment.getBdbInfo();
 				if (bdbInfo != null) {
-					// Update the level to processed
+					// Update the level to RAW
 					bdbInfo.setLevel(getProcessedLevelType());
 					if (segment.getBdbInfo().getFormat() != null) {
 						String type = segment.getBdbInfo().getFormat().getType();
