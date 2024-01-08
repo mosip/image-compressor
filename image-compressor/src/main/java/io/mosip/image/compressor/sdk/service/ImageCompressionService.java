@@ -1,7 +1,7 @@
 package io.mosip.image.compressor.sdk.service;
 
 import java.io.IOException;
-import java.util.Base64;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -19,10 +19,9 @@ import org.springframework.core.env.Environment;
 
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.constant.ProcessedLevelType;
+import io.mosip.kernel.biometrics.constant.PurposeType;
 import io.mosip.kernel.biometrics.entities.BDBInfo;
 import io.mosip.kernel.biometrics.entities.BIR;
-import io.mosip.kernel.biometrics.entities.BIRInfo;
-import io.mosip.kernel.biometrics.entities.BIRInfo.BIRInfoBuilder;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.biometrics.model.Response;
 import io.mosip.biometrics.util.ConvertRequestDto;
@@ -72,11 +71,8 @@ public class ImageCompressionService extends SDKService {
 				throw new SDKException(responseStatus.getStatusCode() + "", responseStatus.getStatusMessage());
 			}
 
-			for (BIR segment : sample.getSegments()) {
-				/*
-				 * Can do ISO validation here
-				 */
-				byte[] faceBdb = getBirData(segment);
+			for (int index = 0 ; index < sample.getSegments().size(); index++) {
+				BIR segment = sample.getSegments().get(index);
 
 				/*
 				 * Below Code can be removed if we require PayLoad information
@@ -87,22 +83,54 @@ public class ImageCompressionService extends SDKService {
 				 * segment.getBirInfo().setPayload(segment.getBdb());
 				 */
 
-				BDBInfo bdbInfo = segment.getBdbInfo();
-				if (bdbInfo != null) {
-					// Update the level to RAW
-					bdbInfo.setLevel(getProcessedLevelType());
+				if (segment.getBdbInfo() != null) {
 					if (segment.getBdbInfo().getFormat() != null) {
 						String type = segment.getBdbInfo().getFormat().getType();
-						// Update the fingerprint image to fingerprint minutiae type
+						// Process only for Face
 						if (type != null && type.equals(String.valueOf(FORMAT_TYPE_FACE))) {
-							// do actual resize and compression .. create the face ISO ISO19794_5_2011
+							BIR extractBir = new BIR();
+							extractBir.setVersion(segment.getVersion());
+							extractBir.setCbeffversion(segment.getCbeffversion());
+							extractBir.setBirInfo(segment.getBirInfo());
+							extractBir.setBdbInfo(segment.getBdbInfo());
+
+							/*
+							 * Can do ISO validation here
+							 */
+							byte[] faceBdb = getBirData(segment);
+
+							/*
+							 *  do actual resize and compression .. create the face ISO ISO19794_5_2011
+							 */
 							byte[] data = doFaceConversion("REGISTRATION", resizeAndCompress(faceBdb));
-							segment.setBdb(data);
+							extractBir.setBdb(data);
+
+							/*
+							 *  Update the Created Date
+							 */
+							extractBir.getBdbInfo().setCreationDate(LocalDateTime.now());
+							
+							/*
+							 *  Update the Processed Level Type
+							 */
+							extractBir.getBdbInfo().setLevel(getProcessedLevelType());
+
+							/*
+							 *  Update the Purpose Type
+							 */
+							extractBir.getBdbInfo().setPurpose(getPurposeType());
+							
+							/*
+							 *  Update the Quality to null as we do not have quality tool to set the value
+							 */
+							extractBir.getBdbInfo().setQuality(null);
+
+							sample.getSegments().set(index, extractBir);
 						} else {
-							throw new SDKException(ResponseStatus.INVALID_INPUT.toString(),
+							throw new SDKException(ResponseStatus.INVALID_INPUT.ordinal() + "",
 									String.format(" FORMAT_TYPE_FACE is wrong ! Excepected Value is 8, Received is %s", type));
 						}
-					}
+					}					
 				}
 			}
 		} catch (SDKException ex) {
@@ -224,5 +252,9 @@ public class ImageCompressionService extends SDKService {
 
 	public ProcessedLevelType getProcessedLevelType() {
 		return ProcessedLevelType.RAW;
+	}
+
+	public PurposeType getPurposeType() {
+		return PurposeType.VERIFY;
 	}
 }
