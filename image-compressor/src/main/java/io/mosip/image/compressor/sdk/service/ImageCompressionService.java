@@ -83,54 +83,56 @@ public class ImageCompressionService extends SDKService {
 				 * segment.getBirInfo().setPayload(segment.getBdb());
 				 */
 
-				if (segment.getBdbInfo() != null) {
-					if (segment.getBdbInfo().getFormat() != null) {
-						String type = segment.getBdbInfo().getFormat().getType();
-						// Process only for Face
-						if (type != null && type.equals(String.valueOf(FORMAT_TYPE_FACE))) {
-							BIR extractBir = new BIR();
-							extractBir.setVersion(segment.getVersion());
-							extractBir.setCbeffversion(segment.getCbeffversion());
-							extractBir.setBirInfo(segment.getBirInfo());
-							extractBir.setBdbInfo(segment.getBdbInfo());
+				if (segment.getBdbInfo() != null && segment.getBdbInfo().getFormat() != null) {
+					String type = segment.getBdbInfo().getFormat().getType();
+					// Process only for Face
+					if (type != null && type.equals(String.valueOf(FORMAT_TYPE_FACE))) {
+						BIR extractBir = new BIR();
+						extractBir.setVersion(segment.getVersion());
+						extractBir.setCbeffversion(segment.getCbeffversion());
+						extractBir.setBirInfo(segment.getBirInfo());
+						extractBir.setBdbInfo(segment.getBdbInfo());
 
-							/*
-							 * Can do ISO validation here
-							 */
-							byte[] faceBdb = getBirData(segment);
+						/*
+						 * Can do ISO validation here
+						 */
+						byte[] faceBdb = getBirData(segment);
 
-							/*
-							 *  do actual resize and compression .. create the face ISO ISO19794_5_2011
-							 */
-							byte[] data = doFaceConversion("REGISTRATION", resizeAndCompress(faceBdb));
-							extractBir.setBdb(data);
+						/*
+						 *  do actual resize and compression .. create the face ISO ISO19794_5_2011
+						 */
+						byte[] data = doFaceConversion("REGISTRATION", resizeAndCompress(faceBdb));
+						extractBir.setBdb(data);
 
-							/*
-							 *  Update the Created Date
-							 */
-							extractBir.getBdbInfo().setCreationDate(LocalDateTime.now());
-							
-							/*
-							 *  Update the Processed Level Type
-							 */
-							extractBir.getBdbInfo().setLevel(getProcessedLevelType());
+						/*
+						 *  Update the Created Date
+						 */
+						extractBir.getBdbInfo().setCreationDate(LocalDateTime.now());
+						
+						/*
+						 *  Update the Processed Level Type
+						 */
+						extractBir.getBdbInfo().setLevel(getProcessedLevelType());
 
-							/*
-							 *  Update the Purpose Type
-							 */
-							extractBir.getBdbInfo().setPurpose(getPurposeType());
-							
-							/*
-							 *  Update the Quality to null as we do not have quality tool to set the value
-							 */
-							extractBir.getBdbInfo().setQuality(null);
+						/*
+						 *  Update the Purpose Type
+						 */
+						extractBir.getBdbInfo().setPurpose(getPurposeType());
+						
+						/*
+						 *  Update the Quality to null as we do not have quality tool to set the value
+						 */
+						extractBir.getBdbInfo().setQuality(null);
 
-							sample.getSegments().set(index, extractBir);
-						} else {
-							throw new SDKException(ResponseStatus.INVALID_INPUT.ordinal() + "",
-									String.format(" FORMAT_TYPE_FACE is wrong ! Excepected Value is 8, Received is %s", type));
-						}
-					}					
+						sample.getSegments().set(index, extractBir);
+					} else {
+						throw new SDKException(ResponseStatus.INVALID_INPUT.ordinal() + "",
+								String.format(" FORMAT_TYPE_FACE is wrong ! Excepected Value is 8, Received is %s", type));
+					}
+				}
+				else {
+					throw new SDKException(ResponseStatus.INVALID_INPUT.ordinal() + "",
+							String.format(" BDBInfo is null or Format Value is null"));
 				}
 			}
 		} catch (SDKException ex) {
