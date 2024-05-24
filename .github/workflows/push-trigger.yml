@@ -48,3 +48,19 @@ jobs:
       GPG_SECRET: ${{ secrets.GPG_SECRET }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
+  sonar_analysis:
+    needs: build-maven-image-compressor
+    if: "${{ github.event_name != 'pull_request' }}"
+    uses: mosip/kattu/.github/workflows/maven-sonar-analysis.yml@master-java21
+    with:
+      SERVICE_LOCATION: image-compressor
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      ORG_KEY: ${{ secrets.ORG_KEY }}
+      OSSRH_USER: ${{ secrets.OSSRH_USER }}
+      OSSRH_SECRET: ${{ secrets.OSSRH_SECRET }}
+      OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+      GPG_SECRET: ${{ secrets.GPG_SECRET }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+

@@ -3,14 +3,14 @@ package io.mosip.image.compressor.sdk.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import io.mosip.image.compressor.sdk.constant.ResponseStatus;
+import io.mosip.image.compressor.sdk.service.ImageCompressionService;
+import io.mosip.image.compressor.sdk.service.SDKInfoService;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.biometrics.model.MatchDecision;
@@ -18,9 +18,6 @@ import io.mosip.kernel.biometrics.model.QualityCheck;
 import io.mosip.kernel.biometrics.model.Response;
 import io.mosip.kernel.biometrics.model.SDKInfo;
 import io.mosip.kernel.biometrics.spi.IBioApi;
-import io.mosip.image.compressor.sdk.constant.ResponseStatus;
-import io.mosip.image.compressor.sdk.service.ImageCompressionService;
-import io.mosip.image.compressor.sdk.service.SDKInfoService;
 
 /**
  * The Class ImageCompressorSDK.
@@ -30,20 +27,20 @@ import io.mosip.image.compressor.sdk.service.SDKInfoService;
  */
 @Component
 @EnableAutoConfiguration
-@Deprecated
-public class ImageCompressorSDK implements IBioApi {
-	private Logger LOGGER = LoggerFactory.getLogger(ImageCompressorSDK.class);
-
+@Deprecated(since="1.2.0.1", forRemoval=true)
+public class ImageCompressorSDK implements IBioApi // NOSONAR
+{
 	/** The environment. */
-	@Autowired
-	private Environment env;
+	@Autowired	// NOSONAR	
+	private Environment env; 
 
 	private static final String API_VERSION = "0.9";
 
+	private static final String ERROR_NOT_IMPLEMENTED = "Sorry! Method functionality not implemented...";
+
 	@Override
 	public SDKInfo init(Map<String, String> initParams) {
-		// TODO validate for mandatory initParams
-		SDKInfoService service = new SDKInfoService(env, API_VERSION, "sample", "sample", "sample");
+		SDKInfoService service = new SDKInfoService(env, API_VERSION, "sample", "sample", "sample");// NOSONAR	
 		return service.getSDKInfo();
 	}
 
@@ -52,7 +49,8 @@ public class ImageCompressorSDK implements IBioApi {
 			Map<String, String> flags) {
 		Response<QualityCheck> response = new Response<>();
 		response.setStatusCode(ResponseStatus.UNKNOWN_ERROR.getStatusCode());
-		response.setStatusMessage(String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage() + " Sorry! Method functionality not implemented..."));
+		response.setStatusMessage(String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage(),
+				ERROR_NOT_IMPLEMENTED));// NOSONAR	
 		response.setResponse(null);
 		return response;
 	}
@@ -62,7 +60,8 @@ public class ImageCompressorSDK implements IBioApi {
 			List<BiometricType> modalitiesToMatch, Map<String, String> flags) {
 		Response<MatchDecision[]> response = new Response<>();
 		response.setStatusCode(ResponseStatus.UNKNOWN_ERROR.getStatusCode());
-		response.setStatusMessage(String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage() + " Sorry! Method functionality not implemented..."));
+		response.setStatusMessage(String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage(),
+				ERROR_NOT_IMPLEMENTED));
 		response.setResponse(null);
 		return response;
 	}
@@ -79,7 +78,8 @@ public class ImageCompressorSDK implements IBioApi {
 			Map<String, String> flags) {
 		Response<BiometricRecord> response = new Response<>();
 		response.setStatusCode(ResponseStatus.UNKNOWN_ERROR.getStatusCode());
-		response.setStatusMessage(String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage() + " Sorry! Method functionality not implemented..."));
+		response.setStatusMessage(String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage(),
+				ERROR_NOT_IMPLEMENTED));
 		response.setResponse(null);
 		return response;
 	}

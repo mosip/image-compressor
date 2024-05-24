@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.springframework.core.env.Environment;
 
 import io.mosip.kernel.biometrics.constant.BiometricFunction;
@@ -15,10 +12,10 @@ import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.model.SDKInfo;
 
 public class SDKInfoService extends SDKService {
-	private Logger LOGGER = LoggerFactory.getLogger(SDKInfoService.class);
-
 	private String apiVersion;
-	private String sample1, sample2, sample3;
+	private String sample1;
+	private String sample2;
+	private String sample3;
 
 	public SDKInfoService(Environment env, String apiVersion, String sample1, String sample2, String sample3) {
 		super(env, null);
@@ -33,7 +30,7 @@ public class SDKInfoService extends SDKService {
 		List<BiometricType> supportedModalities = new ArrayList<>();
 		supportedModalities.add(BiometricType.FACE);
 		sdkInfo.setSupportedModalities(supportedModalities);
-		Map<BiometricFunction, List<BiometricType>> supportedMethods = new HashMap<>();
+		Map<BiometricFunction, List<BiometricType>> supportedMethods = new HashMap<>(); // NOSONAR
 		supportedMethods.put(BiometricFunction.EXTRACT, supportedModalities);
 		sdkInfo.setSupportedMethods(supportedMethods);
 		return sdkInfo;

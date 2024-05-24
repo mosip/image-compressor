@@ -7,16 +7,20 @@ package io.mosip.image.compressor.sdk.constant;
  * 
  */
 public class SdkConstant {
+	private SdkConstant() {
+		throw new IllegalStateException("SdkConstant class");
+	}
+
 	/**
 	 * 0 to Double.Max_value
 	 */
-	public static String IMAGE_COMPRESSOR_RESIZE_FACTOR_FX = "mosip.bio.image.compressor.resize.factor.fx";
+	public static final String IMAGE_COMPRESSOR_RESIZE_FACTOR_FX = "mosip.bio.image.compressor.resize.factor.fx";
 	/**
 	 * 0 to Double.Max_value
 	 */
-	public static String IMAGE_COMPRESSOR_RESIZE_FACTOR_FY = "mosip.bio.image.compressor.resize.factor.fy";
+	public static final String IMAGE_COMPRESSOR_RESIZE_FACTOR_FY = "mosip.bio.image.compressor.resize.factor.fy";
 	/**
 	 * 1 to 1000
 	 */
-	public static String IMAGE_COMPRESSOR_COMPRESSION_RATIO = "mosip.bio.image.compressor.compression.ratio";
+	public static final String IMAGE_COMPRESSOR_COMPRESSION_RATIO = "mosip.bio.image.compressor.compression.ratio";
 }
