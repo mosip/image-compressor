@@ -22,7 +22,7 @@ import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 
 public abstract class SDKService {
-	protected Logger LOGGER = LoggerFactory.getLogger(SDKService.class);
+	protected Logger logger = LoggerFactory.getLogger(SDKService.class);
 	private Map<String, String> flags;
 	private Environment env;
 
@@ -47,7 +47,7 @@ public abstract class SDKService {
 		this.env = env;
 	}
 
-	protected Map<BiometricType, List<BIR>> getBioSegmentMap(BiometricRecord record,
+	protected Map<BiometricType, List<BIR>> getBioSegmentMap(BiometricRecord bioRecord,
 			List<BiometricType> modalitiesToMatch) {
 		Boolean noFilter = false;
 
@@ -58,19 +58,17 @@ public abstract class SDKService {
 		if (modalitiesToMatch == null || modalitiesToMatch.isEmpty())
 			noFilter = true;
 
-		Map<BiometricType, List<BIR>> bioSegmentMap = new HashMap<>();
-		for (BIR segment : record.getSegments()) {
+		Map<BiometricType, List<BIR>> bioSegmentMap = new HashMap<>(); // NOSONAR
+		for (BIR segment : bioRecord.getSegments()) {
 			BiometricType bioType = segment.getBdbInfo().getType().get(0);
 
 			/**
 			 * ignore modalities that are not to be matched
 			 */
-			if (noFilter == false && !modalitiesToMatch.contains(bioType))
+			if (Boolean.FALSE.equals(noFilter) && !modalitiesToMatch.contains(bioType))
 				continue;
 
-			if (!bioSegmentMap.containsKey(bioType)) {
-				bioSegmentMap.put(bioType, new ArrayList<BIR>());
-			}
+			bioSegmentMap.computeIfAbsent(bioType, k -> new ArrayList<>());
 			bioSegmentMap.get(bioType).add(segment);
 		}
 
@@ -89,28 +87,25 @@ public abstract class SDKService {
 				bioSubType += " " + bioSubTypeList.get(1).trim();
 		}
 
-		if (isValidBIRParams(bir, biometricType, bioSubType))
-		{
+		if (isValidBIRParams(bir, biometricType, bioSubType)) {
 			return getBDBData(purposeType, biometricType, bioSubType, bir.getBdb());
 		}
-		return null;
+		throw new SDKException(ResponseStatus.UNKNOWN_ERROR + "", "null");
 	}
 
-	protected boolean isValidBIRParams(BIR segment, BiometricType bioType, String bioSubType) {
+	protected boolean isValidBIRParams(BIR segment, BiometricType bioType, String bioSubType) // NOSONAR
+	{
 		ResponseStatus responseStatus = null;
-		switch (bioType) {
-		case FACE:
-			break;
-		default:
-			LOGGER.error("isValidBIRParams>>BiometricType#" + bioType + ">>BioSubType#" + bioSubType);
+		if (bioType == BiometricType.FACE)
+			return true;
+		else {
+			logger.error("isValidBIRParams::BiometricType{} BioSubType{}", bioType, bioSubType);
 			responseStatus = ResponseStatus.MISSING_INPUT;
 			throw new SDKException(responseStatus.getStatusCode() + "", responseStatus.getStatusMessage());
 		}
-		return true;
 	}
 
-	protected byte[] getBDBData(PurposeType purposeType, BiometricType bioType, String bioSubType,
-			byte[] bdbData) {
+	protected byte[] getBDBData(PurposeType purposeType, BiometricType bioType, String bioSubType, byte[] bdbData) {
 		ResponseStatus responseStatus = null;
 
 		if (bdbData != null && bdbData.length != 0) {
@@ -124,30 +119,22 @@ public abstract class SDKService {
 	protected byte[] getBiometericData(PurposeType purposeType, BiometricType bioType, String bioSubType,
 			String bdbData) {
 		ResponseStatus responseStatus = null;
-		switch (bioType) {
-		case FACE:
+		if (bioType == BiometricType.FACE)
 			return getFaceBdb(purposeType, bioSubType, bdbData);
-		default:
-			break;
-		}
 		responseStatus = ResponseStatus.INVALID_INPUT;
 		throw new SDKException(responseStatus.getStatusCode() + "", responseStatus.getStatusMessage());
 	}
 
-	protected byte[] getFaceBdb(PurposeType purposeType, String biometricSubType, String bdbData) {
+	protected byte[] getFaceBdb(PurposeType purposeType, String biometricSubType, String bdbData) // NOSONAR
+	{
 		ResponseStatus responseStatus = null;
 		try {
 			ConvertRequestDto requestDto = new ConvertRequestDto();
 			requestDto.setModality("Face");
 			requestDto.setVersion("ISO19794_5_2011");
-			byte[] bioData = null;
-			try {
-				bioData = Util.decodeURLSafeBase64(bdbData);
-				requestDto.setInputBytes(bioData);
-			} catch (Exception e) {
-				responseStatus = ResponseStatus.INVALID_INPUT;
-				throw new SDKException(responseStatus.getStatusCode() + "", responseStatus.getStatusMessage());
-			}
+			byte[] bioData = Util.decodeURLSafeBase64(bdbData);
+			requestDto.setInputBytes(bioData);
+
 			FaceBDIR bdir = FaceDecoder.getFaceBDIR(requestDto);
 			return bdir.getImage();
 		} catch (Exception ex) {
