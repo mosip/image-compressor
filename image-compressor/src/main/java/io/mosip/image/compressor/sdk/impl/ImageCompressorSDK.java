@@ -24,6 +24,10 @@ import io.mosip.kernel.biometrics.spi.IBioApi;
  * 
  * @author Janardhan B S
  * 
+ * This class is deprecated and will be removed in future versions.
+ *
+ * @since 1.2.0.1
+ * @deprecated since 1.2.0.1, for removal in a future release
  */
 @Component
 @EnableAutoConfiguration

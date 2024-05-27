@@ -234,7 +234,7 @@ public class ImageCompressionService extends SDKService {
 				return FaceEncoder.convertFaceImageToISO(requestDto);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("doFaceConversion::error", ex);
 			responseStatus = ResponseStatus.UNKNOWN_ERROR;
 			throw new SDKException(responseStatus.getStatusCode() + "", responseStatus.getStatusMessage());
 		}
