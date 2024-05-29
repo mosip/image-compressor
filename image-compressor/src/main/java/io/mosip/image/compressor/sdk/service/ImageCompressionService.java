@@ -27,7 +27,7 @@ import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.biometrics.model.Response;
 
 public class ImageCompressionService extends SDKService {
-	private Logger logger = LoggerFactory.getLogger(ImageCompressionService.class); // NOSONAR
+	private Logger logger = LoggerFactory.getLogger(ImageCompressionService.class);
 
 	static {
 		/**
@@ -43,7 +43,8 @@ public class ImageCompressionService extends SDKService {
 	}
 
 	private BiometricRecord sample;
-	private List<BiometricType> modalitiesToExtract;// NOSONAR
+	@SuppressWarnings("unused")
+	private List<BiometricType> modalitiesToExtract;
 
 	public static final long FORMAT_TYPE_FACE = 8;
 
@@ -54,8 +55,8 @@ public class ImageCompressionService extends SDKService {
 		this.modalitiesToExtract = modalitiesToExtract;
 	}
 
-	public Response<BiometricRecord> getExtractTemplateInfo() // NOSONAR
-	{
+	@SuppressWarnings({ "java:S3776", "java:S6541" })
+	public Response<BiometricRecord> getExtractTemplateInfo() {
 		logger.info("ExtractTemplateInfo :: Started Request :: {}", sample != null ? sample.toString() : null);
 
 		ResponseStatus responseStatus = null;
@@ -200,8 +201,8 @@ public class ImageCompressionService extends SDKService {
 			compression = this.getEnv().getProperty(SdkConstant.IMAGE_COMPRESSOR_COMPRESSION_RATIO, Integer.class, 50);
 		}
 
-		logger.info("Factor ratio Details :: {} ", String
-				.format("orginal fx=%.2f, orginal fy=%.2f, Compression Ratio==%d ", fxOrginal, fyOrginal, compression));// NOSONAR
+		logger.info("Factor ratio Details :: orginal fx={}, orginal fy={}, Compression Ratio=={} ", fxOrginal,
+				fyOrginal, compression);
 
 		Imgproc.resize(src, dst, new Size(0, 0), fxOrginal, fyOrginal, Imgproc.INTER_AREA);
 		logger.info("Resized Image Details :: Width {} Height {} Total Size {}", dst.width(), dst.height(),
@@ -243,7 +244,7 @@ public class ImageCompressionService extends SDKService {
 
 	public ProcessedLevelType getProcessedLevelType() {
 		ProcessedLevelType[] types = new ProcessedLevelType[] { ProcessedLevelType.RAW, ProcessedLevelType.INTERMEDIATE,
-				ProcessedLevelType.PROCESSED };// NOSONAR
+				ProcessedLevelType.PROCESSED };
 
 		return types[0];
 	}

@@ -32,10 +32,11 @@ import io.mosip.kernel.biometrics.spi.IBioApi;
 @Component
 @EnableAutoConfiguration
 @Deprecated(since="1.2.0.1", forRemoval=true)
-public class ImageCompressorSDK implements IBioApi // NOSONAR
+public class ImageCompressorSDK implements IBioApi 
 {
 	/** The environment. */
-	@Autowired	// NOSONAR	
+	@SuppressWarnings({ "java:S6813" })
+	@Autowired		
 	private Environment env; 
 
 	private static final String API_VERSION = "0.9";
@@ -44,7 +45,7 @@ public class ImageCompressorSDK implements IBioApi // NOSONAR
 
 	@Override
 	public SDKInfo init(Map<String, String> initParams) {
-		SDKInfoService service = new SDKInfoService(env, API_VERSION, "sample", "sample", "sample");// NOSONAR	
+		SDKInfoService service = new SDKInfoService(env, API_VERSION, "sample1", "sample2", "sample3");	
 		return service.getSDKInfo();
 	}
 
@@ -54,7 +55,7 @@ public class ImageCompressorSDK implements IBioApi // NOSONAR
 		Response<QualityCheck> response = new Response<>();
 		response.setStatusCode(ResponseStatus.UNKNOWN_ERROR.getStatusCode());
 		response.setStatusMessage(String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage(),
-				ERROR_NOT_IMPLEMENTED));// NOSONAR	
+				ERROR_NOT_IMPLEMENTED));	
 		response.setResponse(null);
 		return response;
 	}
