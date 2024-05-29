@@ -29,7 +29,8 @@ import io.mosip.kernel.biometrics.spi.IBioApiV2;
 @EnableAutoConfiguration
 public class ImageCompressorSDKV2 implements IBioApiV2 {
 	/** The environment. */
-	@Autowired // NOSONAR
+	@SuppressWarnings({ "java:S6813" })
+	@Autowired
 	private Environment env;
 
 	private static final String API_VERSION = "0.9";

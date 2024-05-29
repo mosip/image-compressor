@@ -30,7 +30,7 @@ public class SDKInfoService extends SDKService {
 		List<BiometricType> supportedModalities = new ArrayList<>();
 		supportedModalities.add(BiometricType.FACE);
 		sdkInfo.setSupportedModalities(supportedModalities);
-		Map<BiometricFunction, List<BiometricType>> supportedMethods = new HashMap<>(); // NOSONAR
+		Map<BiometricFunction, List<BiometricType>> supportedMethods = new HashMap<>(); 
 		supportedMethods.put(BiometricFunction.EXTRACT, supportedModalities);
 		sdkInfo.setSupportedMethods(supportedMethods);
 		return sdkInfo;

@@ -63,11 +63,11 @@ public class SampleSDKTest1 {
                 Assert.assertEquals("Should be Raw", compressed_record.getSegments().get(0).getBdbInfo().getLevel().toString(), ProcessedLevelType.RAW.toString());
             }
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+			LOGGER.error("testFace", e);
         } catch (IOException e) {
-            e.printStackTrace();
+			LOGGER.error("testFace", e);
         } catch (SAXException e) {
-            e.printStackTrace();
+			LOGGER.error("testFace", e);
         }
     }
 

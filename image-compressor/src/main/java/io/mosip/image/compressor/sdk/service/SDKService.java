@@ -22,7 +22,7 @@ import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 
 public abstract class SDKService {
-	protected Logger logger = LoggerFactory.getLogger(SDKService.class);
+	private Logger logger = LoggerFactory.getLogger(SDKService.class);
 	private Map<String, String> flags;
 	private Environment env;
 
@@ -58,7 +58,7 @@ public abstract class SDKService {
 		if (modalitiesToMatch == null || modalitiesToMatch.isEmpty())
 			noFilter = true;
 
-		Map<BiometricType, List<BIR>> bioSegmentMap = new HashMap<>(); // NOSONAR
+		Map<BiometricType, List<BIR>> bioSegmentMap = new HashMap<>(); 
 		for (BIR segment : bioRecord.getSegments()) {
 			BiometricType bioType = segment.getBdbInfo().getType().get(0);
 
@@ -93,7 +93,8 @@ public abstract class SDKService {
 		throw new SDKException(ResponseStatus.UNKNOWN_ERROR + "", "null");
 	}
 
-	protected boolean isValidBIRParams(BIR segment, BiometricType bioType, String bioSubType) // NOSONAR
+	@SuppressWarnings({ "unused" })
+	protected boolean isValidBIRParams(BIR segment, BiometricType bioType, String bioSubType) 
 	{
 		ResponseStatus responseStatus = null;
 		if (bioType == BiometricType.FACE)
@@ -125,7 +126,8 @@ public abstract class SDKService {
 		throw new SDKException(responseStatus.getStatusCode() + "", responseStatus.getStatusMessage());
 	}
 
-	protected byte[] getFaceBdb(PurposeType purposeType, String biometricSubType, String bdbData) // NOSONAR
+	@SuppressWarnings({ "unused" })
+	protected byte[] getFaceBdb(PurposeType purposeType, String biometricSubType, String bdbData) 
 	{
 		ResponseStatus responseStatus = null;
 		try {
