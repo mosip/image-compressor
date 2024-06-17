@@ -1,21 +1,27 @@
 package io.mosip.image.compressor.sdk.utils;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.ArrayUtils;
+
+import io.mosip.image.compressor.sdk.constant.ResponseStatus;
+import io.mosip.image.compressor.sdk.exceptions.SDKException;
+
 public class Util {
-	public static boolean compareHash(byte[] s1, byte[] s2) throws NoSuchAlgorithmException {
+	private Util() {
+		throw new IllegalStateException("Util class");
+	}
+
+	public static boolean compareHash(byte[] s1, byte[] s2) {
 		String checksum1 = computeFingerPrint(s1, null).toLowerCase();
 		String checksum2 = computeFingerPrint(s2, null).toLowerCase();
 		return checksum1.equals(checksum2);
 	}
 
-	public static String computeFingerPrint(byte[] data, String metaData) throws NoSuchAlgorithmException {
+	public static String computeFingerPrint(byte[] data, String metaData) {
 		byte[] combinedPlainTextBytes = null;
 		if (metaData == null) {
 			combinedPlainTextBytes = ArrayUtils.addAll(data);
@@ -46,7 +52,7 @@ public class Util {
 
 	public static byte[] decodeURLSafeBase64(String data) {
 		if (isNullEmpty(data)) {
-			return null;
+			throw new SDKException(ResponseStatus.UNKNOWN_ERROR.toString(), "decodeURLSafeBase64::data{null}");
 		}
 		return Base64.getUrlDecoder().decode(data);
 	}

@@ -3,14 +3,14 @@ package io.mosip.image.compressor.sdk.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import io.mosip.image.compressor.sdk.constant.ResponseStatus;
+import io.mosip.image.compressor.sdk.service.ImageCompressionService;
+import io.mosip.image.compressor.sdk.service.SDKInfoService;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.biometrics.model.MatchDecision;
@@ -18,9 +18,6 @@ import io.mosip.kernel.biometrics.model.QualityCheck;
 import io.mosip.kernel.biometrics.model.Response;
 import io.mosip.kernel.biometrics.model.SDKInfo;
 import io.mosip.kernel.biometrics.spi.IBioApiV2;
-import io.mosip.image.compressor.sdk.constant.ResponseStatus;
-import io.mosip.image.compressor.sdk.service.ImageCompressionService;
-import io.mosip.image.compressor.sdk.service.SDKInfoService;
 
 /**
  * The Class ImageCompressorSDKV2.
@@ -31,18 +28,17 @@ import io.mosip.image.compressor.sdk.service.SDKInfoService;
 @Component
 @EnableAutoConfiguration
 public class ImageCompressorSDKV2 implements IBioApiV2 {
-	private Logger LOGGER = LoggerFactory.getLogger(ImageCompressorSDKV2.class);
-
 	/** The environment. */
+	@SuppressWarnings({ "java:S6813" })
 	@Autowired
 	private Environment env;
 
 	private static final String API_VERSION = "0.9";
+	private static final String ERROR_NOT_IMPLEMENTED = "Sorry! Method functionality not implemented...";
 
 	@Override
 	public SDKInfo init(Map<String, String> initParams) {
-		// TODO validate for mandatory initParams
-		SDKInfoService service = new SDKInfoService(env, API_VERSION, "sample", "sample", "sample");
+		SDKInfoService service = new SDKInfoService(env, API_VERSION, "sample", "sample1", "sample2");
 		return service.getSDKInfo();
 	}
 
@@ -51,7 +47,8 @@ public class ImageCompressorSDKV2 implements IBioApiV2 {
 			Map<String, String> flags) {
 		Response<QualityCheck> response = new Response<>();
 		response.setStatusCode(ResponseStatus.UNKNOWN_ERROR.getStatusCode());
-		response.setStatusMessage(String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage() + " Sorry! Method functionality not implemented..."));
+		response.setStatusMessage(
+				String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage(), ERROR_NOT_IMPLEMENTED));
 		response.setResponse(null);
 		return response;
 	}
@@ -61,7 +58,8 @@ public class ImageCompressorSDKV2 implements IBioApiV2 {
 			List<BiometricType> modalitiesToMatch, Map<String, String> flags) {
 		Response<MatchDecision[]> response = new Response<>();
 		response.setStatusCode(ResponseStatus.UNKNOWN_ERROR.getStatusCode());
-		response.setStatusMessage(String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage() + " Sorry! Method functionality not implemented..."));
+		response.setStatusMessage(
+				String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage(), ERROR_NOT_IMPLEMENTED));
 		response.setResponse(null);
 		return response;
 	}
@@ -78,13 +76,17 @@ public class ImageCompressorSDKV2 implements IBioApiV2 {
 			Map<String, String> flags) {
 		Response<BiometricRecord> response = new Response<>();
 		response.setStatusCode(ResponseStatus.UNKNOWN_ERROR.getStatusCode());
-		response.setStatusMessage(String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage() + " Sorry! Method functionality not implemented..."));
+		response.setStatusMessage(
+				String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage(), ERROR_NOT_IMPLEMENTED));
 		response.setResponse(null);
 		return response;
 	}
 
+	/**
+	 * @deprecated (use convertFormatV2)
+	 */
 	@Override
-	@Deprecated
+	@Deprecated(since = "1.2.0.1", forRemoval = true)
 	public BiometricRecord convertFormat(BiometricRecord sample, String sourceFormat, String targetFormat,
 			Map<String, String> sourceParams, Map<String, String> targetParams,
 			List<BiometricType> modalitiesToConvert) {
@@ -92,12 +94,13 @@ public class ImageCompressorSDKV2 implements IBioApiV2 {
 	}
 
 	@Override
-	public Response<BiometricRecord> convertFormatV2(BiometricRecord record, String sourceFormat, String targetFormat,
-			Map<String, String> sourceParams, Map<String, String> targetParams,
+	public Response<BiometricRecord> convertFormatV2(BiometricRecord bioRecord, String sourceFormat,
+			String targetFormat, Map<String, String> sourceParams, Map<String, String> targetParams,
 			List<BiometricType> modalitiesToConvert) {
 		Response<BiometricRecord> response = new Response<>();
 		response.setStatusCode(ResponseStatus.UNKNOWN_ERROR.getStatusCode());
-		response.setStatusMessage(String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage() + " Sorry! Method functionality not implemented..."));
+		response.setStatusMessage(
+				String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage(), ERROR_NOT_IMPLEMENTED));
 		response.setResponse(null);
 		return response;
 	}

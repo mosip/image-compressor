@@ -33,23 +33,22 @@ import io.mosip.kernel.biometrics.entities.VersionType;
 import io.mosip.kernel.biometrics.model.Response;
 
 public class SampleSDKTest1 {
-    Logger LOGGER = LoggerFactory.getLogger(SampleSDKTest1.class);
+	private Logger LOGGER = LoggerFactory.getLogger(SampleSDKTest1.class);
 
     private static String sampleFace = "";
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		SampleSDKTest1 test = new SampleSDKTest1();
-		test.test_face();
+		test.testFace();
 	}
 
 	 public void Setup() {
 		 sampleFace = SampleSDKTest1.class.getResource("/sample_files/sample_face.xml").getPath();
     }
 	 
-    public void test_face() {
+    public void testFace() {
         try {
-            List<BiometricType> modalitiesToMatch = new ArrayList<BiometricType>(){{
+            List<BiometricType> modalitiesToMatch = new ArrayList<>(){{
                 add(BiometricType.FACE);
                 add(BiometricType.FINGER);
                 add(BiometricType.IRIS);
@@ -64,23 +63,23 @@ public class SampleSDKTest1 {
                 Assert.assertEquals("Should be Raw", compressed_record.getSegments().get(0).getBdbInfo().getLevel().toString(), ProcessedLevelType.RAW.toString());
             }
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+			LOGGER.error("testFace", e);
         } catch (IOException e) {
-            e.printStackTrace();
+			LOGGER.error("testFace", e);
         } catch (SAXException e) {
-            e.printStackTrace();
+			LOGGER.error("testFace", e);
         }
     }
 
     private BiometricRecord xmlFileToBiometricRecord(String path) throws ParserConfigurationException, IOException, SAXException {
         BiometricRecord biometricRecord = new BiometricRecord();
-        List bir_segments = new ArrayList();
+        List<BIR> birSegments = new ArrayList<>();
         File fXmlFile = new File(path);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
         doc.getDocumentElement().normalize();
-        LOGGER.debug("Root element :" + doc.getDocumentElement().getNodeName());
+        LOGGER.debug("Root element :{}", doc.getDocumentElement().getNodeName());
         Node rootBIRElement = doc.getDocumentElement();
         NodeList childNodes = rootBIRElement.getChildNodes();
         for (int temp = 0; temp < childNodes.getLength(); temp++) {
@@ -124,9 +123,6 @@ public class SampleSDKTest1 {
                 bd.withBdbInfo(bdbInfo);
 
                 /* BDB */
-                //String nBDB = ((Element) childNode).getElementsByTagName("BDB").item(0).getTextContent();
-                //bd.withBdb(nBDB.getBytes("UTF-8"));
-                
                 byte[] nBDB = Base64.getDecoder().decode(((Element) childNode).getElementsByTagName("BDB").item(0).getTextContent());
                 bd.withBdb(nBDB);
 
@@ -134,10 +130,10 @@ public class SampleSDKTest1 {
                 BIR bir = new BIR(bd);
 
                 /* Add BIR to list of segments */
-                bir_segments.add(bir);
+                birSegments.add(bir);
             }
         }
-        biometricRecord.setSegments(bir_segments);
+        biometricRecord.setSegments(birSegments);
         return biometricRecord;
     }
 
