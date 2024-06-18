@@ -21,32 +21,89 @@ import io.mosip.kernel.biometrics.constant.PurposeType;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 
+/**
+ * Abstract base class for Biometric SDK services.
+ * 
+ * This class defines common methods and functionalities for processing
+ * biometric data used by its concrete implementations. It provides methods for:
+ * - Accessing environment variables and configuration flags. - Extracting
+ * biometric segments from a BiometricRecord object based on specified
+ * modalities. - Retrieving biometric data from a Biometric Identification
+ * Record (BIR) object. - Processing and extracting relevant information from
+ * different biometric modalities (currently only Face is supported).
+ * 
+ * Subclasses can extend this class to implement specific functionalities
+ * related to the Biometric SDK.
+ */
 public abstract class SDKService {
 	private Logger logger = LoggerFactory.getLogger(SDKService.class);
 	private Map<String, String> flags;
 	private Environment env;
 
+	/**
+	 * Constructs an instance of SDKService with the specified environment and
+	 * flags.
+	 *
+	 * @param env   The environment configuration for SDK operations.
+	 * @param flags The flags configuration for SDK operations.
+	 */
 	protected SDKService(Environment env, Map<String, String> flags) {
 		setEnv(env);
 		setFlags(flags);
 	}
 
+	/**
+	 * Retrieves the flags configuration currently set in this SDKService instance.
+	 *
+	 * @return The map of flags configured for SDK operations.
+	 */
 	protected Map<String, String> getFlags() {
 		return flags;
 	}
 
+	/**
+	 * Sets the flags configuration for this SDKService instance.
+	 *
+	 * @param flags The map of flags to be set for SDK operations.
+	 */
 	protected void setFlags(Map<String, String> flags) {
 		this.flags = flags;
 	}
 
+	/**
+	 * Retrieves the environment configuration currently set in this SDKService
+	 * instance.
+	 *
+	 * @return The environment configuration for SDK operations.
+	 */
 	protected Environment getEnv() {
 		return env;
 	}
 
+	/**
+	 * Sets the environment configuration for this SDKService instance.
+	 *
+	 * @param env The environment configuration to be set for SDK operations.
+	 */
 	protected void setEnv(Environment env) {
 		this.env = env;
 	}
 
+	/**
+	 * Extracts a map of BiometricType to corresponding BIR (Biometric
+	 * Identification Record) segments from a BiometricRecord object.
+	 * 
+	 * This method iterates through the segments in the BiometricRecord and filters
+	 * them based on the provided modalitiesToMatch list. If no modalities are
+	 * specified, all segments are included.
+	 * 
+	 * @param bioRecord         The BiometricRecord object containing biometric data
+	 *                          segments.
+	 * @param modalitiesToMatch A list of BiometricType values specifying the
+	 *                          modalities to extract (optional).
+	 * @return A map where keys are BiometricType and values are lists of
+	 *         corresponding BIR segments.
+	 */
 	protected Map<BiometricType, List<BIR>> getBioSegmentMap(BiometricRecord bioRecord,
 			List<BiometricType> modalitiesToMatch) {
 		Boolean noFilter = false;
@@ -58,7 +115,7 @@ public abstract class SDKService {
 		if (modalitiesToMatch == null || modalitiesToMatch.isEmpty())
 			noFilter = true;
 
-		Map<BiometricType, List<BIR>> bioSegmentMap = new HashMap<>(); 
+		Map<BiometricType, List<BIR>> bioSegmentMap = new HashMap<>();
 		for (BIR segment : bioRecord.getSegments()) {
 			BiometricType bioType = segment.getBdbInfo().getType().get(0);
 
@@ -75,6 +132,19 @@ public abstract class SDKService {
 		return bioSegmentMap;
 	}
 
+	/**
+	 * Extracts the raw biometric data from a BIR (Biometric Identification Record)
+	 * object.
+	 * 
+	 * This method validates the provided BIR object and its parameters before
+	 * attempting to extract the data. If validation fails, an SDKException is
+	 * thrown. Otherwise, the appropriate processing method is called based on the
+	 * BiometricType.
+	 * 
+	 * @param bir The BIR object containing biometric data.
+	 * @return A byte array containing the raw biometric data.
+	 * @throws SDKException If the BIR object is invalid or data extraction fails.
+	 */
 	protected byte[] getBirData(BIR bir) {
 		BiometricType biometricType = bir.getBdbInfo().getType().get(0);
 		PurposeType purposeType = bir.getBdbInfo().getPurpose();
@@ -93,9 +163,22 @@ public abstract class SDKService {
 		throw new SDKException(ResponseStatus.UNKNOWN_ERROR + "", "null");
 	}
 
+	/**
+	 * Validates the parameters of a BIR object (BiometricType and BioSubType).
+	 * 
+	 * This method currently only supports facial recognition (BiometricType.FACE).
+	 * If a different BiometricType is encountered, it logs an error message and
+	 * throws an SDKException. Subclasses can potentially override this method to
+	 * support additional modalities.
+	 * 
+	 * @param segment    The BIR object to be validated.
+	 * @param bioType    The BiometricType of the BIR object.
+	 * @param bioSubType The BioSubType of the BIR object (optional).
+	 * @return boolean (always true for Face modality currently).
+	 * @throws SDKException If the BiometricType is not supported.
+	 */
 	@SuppressWarnings({ "unused" })
-	protected boolean isValidBIRParams(BIR segment, BiometricType bioType, String bioSubType) 
-	{
+	protected boolean isValidBIRParams(BIR segment, BiometricType bioType, String bioSubType) {
 		ResponseStatus responseStatus = null;
 		if (bioType == BiometricType.FACE)
 			return true;
@@ -106,6 +189,20 @@ public abstract class SDKService {
 		}
 	}
 
+	/**
+	 * Retrieves the biometric data from the given BDB data based on the specified
+	 * parameters. If the BDB data is null or empty, throws an SDKException
+	 * indicating biometric not found.
+	 *
+	 * @param purposeType The purpose type for biometric data retrieval.
+	 * @param bioType     The type of biometric data (e.g., fingerprint, iris,
+	 *                    face).
+	 * @param bioSubType  The subtype of biometric data, specific to the bioType.
+	 * @param bdbData     The BDB data in URL safe Base64 encoded format.
+	 * @return The retrieved biometric data as a byte array.
+	 * @throws SDKException If the BDB data is null or empty, indicating biometric
+	 *                      not found in CBEFF.
+	 */
 	protected byte[] getBDBData(PurposeType purposeType, BiometricType bioType, String bioSubType, byte[] bdbData) {
 		ResponseStatus responseStatus = null;
 
@@ -117,6 +214,19 @@ public abstract class SDKService {
 		throw new SDKException(responseStatus.getStatusCode() + "", responseStatus.getStatusMessage());
 	}
 
+	/**
+	 * Retrieves the biometric data based on the specified parameters and BDB data.
+	 * Currently supports FACE biometric type.
+	 *
+	 * @param purposeType The purpose type for biometric data retrieval.
+	 * @param bioType     The type of biometric data (currently only supports
+	 *                    BiometricType.FACE).
+	 * @param bioSubType  The subtype of biometric data, specific to the bioType.
+	 * @param bdbData     The BDB data in URL safe Base64 encoded format.
+	 * @return The retrieved biometric data as a byte array.
+	 * @throws SDKException If the biometric type is not supported or if there is an
+	 *                      error retrieving the biometric data.
+	 */
 	protected byte[] getBiometericData(PurposeType purposeType, BiometricType bioType, String bioSubType,
 			String bdbData) {
 		ResponseStatus responseStatus = null;
@@ -126,9 +236,18 @@ public abstract class SDKService {
 		throw new SDKException(responseStatus.getStatusCode() + "", responseStatus.getStatusMessage());
 	}
 
+	/**
+	 * Retrieves the FACE biometric data based on the specified parameters and BDB
+	 * data.
+	 *
+	 * @param purposeType      The purpose type for biometric data retrieval.
+	 * @param biometricSubType The subtype of the FACE biometric data.
+	 * @param bdbData          The BDB data in URL safe Base64 encoded format.
+	 * @return The retrieved FACE biometric data as a byte array.
+	 * @throws SDKException If there is an error retrieving the FACE biometric data.
+	 */
 	@SuppressWarnings({ "unused" })
-	protected byte[] getFaceBdb(PurposeType purposeType, String biometricSubType, String bdbData) 
-	{
+	protected byte[] getFaceBdb(PurposeType purposeType, String biometricSubType, String bdbData) {
 		ResponseStatus responseStatus = null;
 		try {
 			ConvertRequestDto requestDto = new ConvertRequestDto();
