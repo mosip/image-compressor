@@ -136,5 +136,4 @@ public class SampleSDKTest1 {
         biometricRecord.setSegments(birSegments);
         return biometricRecord;
     }
-
 }
