@@ -56,6 +56,7 @@ import io.mosip.kernel.biometrics.spi.IBioApi;
 @Component
 @EnableAutoConfiguration
 @Deprecated(since="1.2.0.1", forRemoval=true)
+@SuppressWarnings("java:S1313") // Suppress the hardcoded IP address warning from Sonar for "1.2.0.1"
 public class ImageCompressorSDK implements IBioApi 
 {
 	/** The environment. */
@@ -157,9 +158,18 @@ public class ImageCompressorSDK implements IBioApi
      */
 	@Override
 	@Deprecated(since = "1.2.0.1", forRemoval = true)
+	@SuppressWarnings("java:S1313") // Suppress the hardcoded IP address warning from Sonar for "1.2.0.1"
 	public BiometricRecord convertFormat(BiometricRecord sample, String sourceFormat, String targetFormat,
 			Map<String, String> sourceParams, Map<String, String> targetParams,
 			List<BiometricType> modalitiesToConvert) {
 		return null;
+	}
+	
+	public Environment getEnv() {
+		return env;
+	}
+
+	public void setEnv(Environment env) {
+		this.env = env;
 	}
 }

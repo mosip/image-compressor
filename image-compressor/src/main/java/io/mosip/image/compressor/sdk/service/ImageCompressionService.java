@@ -162,7 +162,7 @@ public class ImageCompressionService extends SDKService {
 		return response;
 	}
 
-	private void handleUnknownException(SDKException ex, Response<BiometricRecord> response) {
+	protected void handleUnknownException(SDKException ex, Response<BiometricRecord> response) {
 		ResponseStatus status = ResponseStatus.fromStatusCode(Integer.parseInt(ex.getErrorCode()));
 		switch (status) {
 		case INVALID_INPUT:
@@ -211,7 +211,7 @@ public class ImageCompressionService extends SDKService {
 	 * @param jp2000Bytes The input JPEG2000 image data.
 	 * @return Compressed image data as byte array.
 	 */
-	public byte[] resizeAndCompress(byte[] jp2000Bytes) {
+	protected byte[] resizeAndCompress(byte[] jp2000Bytes) {
 		// Storing the image in a Matrix object
 		// of Mat type
 		Mat src = Imgcodecs.imdecode(new MatOfByte(jp2000Bytes), Imgcodecs.IMREAD_UNCHANGED);
@@ -252,7 +252,7 @@ public class ImageCompressionService extends SDKService {
 	 * @param imageData The image data to convert.
 	 * @return Converted image data as byte array.
 	 */
-	public byte[] doFaceConversion(String purpose, byte[] imageData) {
+	protected byte[] doFaceConversion(String purpose, byte[] imageData) {
 		ResponseStatus responseStatus = null;
 		try {
 			ConvertRequestDto requestDto = new ConvertRequestDto();
@@ -281,7 +281,7 @@ public class ImageCompressionService extends SDKService {
 	 *
 	 * @return ProcessedLevelType object representing the processed level.
 	 */
-	public ProcessedLevelType getProcessedLevelType() {
+	protected ProcessedLevelType getProcessedLevelType() {
 		ProcessedLevelType[] types = new ProcessedLevelType[] { ProcessedLevelType.RAW, ProcessedLevelType.INTERMEDIATE,
 				ProcessedLevelType.PROCESSED };
 
@@ -293,7 +293,7 @@ public class ImageCompressionService extends SDKService {
 	 *
 	 * @return PurposeType object representing the purpose.
 	 */
-	public PurposeType getPurposeType() {
+	protected PurposeType getPurposeType() {
 		return PurposeType.VERIFY;
 	}
 

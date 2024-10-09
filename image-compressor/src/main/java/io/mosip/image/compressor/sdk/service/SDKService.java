@@ -259,7 +259,7 @@ public abstract class SDKService {
 			FaceBDIR bdir = FaceDecoder.getFaceBDIR(requestDto);
 			return bdir.getImage();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("getFaceBdb -- error", ex);
 			responseStatus = ResponseStatus.INVALID_INPUT;
 			throw new SDKException(responseStatus.getStatusCode() + "",
 					responseStatus.getStatusMessage() + " " + ex.getLocalizedMessage());

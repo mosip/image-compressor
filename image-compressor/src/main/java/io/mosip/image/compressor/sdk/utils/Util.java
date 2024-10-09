@@ -12,7 +12,6 @@ import io.mosip.image.compressor.sdk.exceptions.SDKException;
 
 public class Util {
 	private Util() {
-		throw new IllegalStateException("Util class");
 	}
 
 	public static boolean compareHash(byte[] s1, byte[] s2) {
