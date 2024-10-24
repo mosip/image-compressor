@@ -165,6 +165,7 @@ public class ImageCompressorSDKV2 implements IBioApiV2 {
      */
 	@Override
 	@Deprecated(since = "1.2.0.1", forRemoval = true)
+	@SuppressWarnings("java:S1313") // Suppress the hardcoded IP address warning from Sonar for "1.2.0.1"
 	public BiometricRecord convertFormat(BiometricRecord sample, String sourceFormat, String targetFormat,
 			Map<String, String> sourceParams, Map<String, String> targetParams,
 			List<BiometricType> modalitiesToConvert) {
@@ -192,5 +193,13 @@ public class ImageCompressorSDKV2 implements IBioApiV2 {
 				String.format(ResponseStatus.UNKNOWN_ERROR.getStatusMessage(), ERROR_NOT_IMPLEMENTED));
 		response.setResponse(null);
 		return response;
+	}
+
+	public Environment getEnv() {
+		return env;
+	}
+
+	public void setEnv(Environment env) {
+		this.env = env;
 	}
 }
