@@ -15,8 +15,7 @@ import org.junit.jupiter.api.Test;
 import io.mosip.image.compressor.sdk.exceptions.SDKException;
 import io.mosip.image.compressor.sdk.utils.Util;
 
-public class UtilTest {
-
+class UtilTest {
     private static final byte[] DATA = "testdata".getBytes();
     private static final byte[] DATA2 = "differentdata".getBytes();
     private static final String METADATA = "metadata";

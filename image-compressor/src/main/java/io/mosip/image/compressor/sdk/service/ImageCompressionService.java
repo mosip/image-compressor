@@ -158,7 +158,7 @@ public class ImageCompressionService extends SDKService {
 		response.setStatusCode(ResponseStatus.SUCCESS.getStatusCode());
 		response.setResponse(sample);
 
-		logger.info("ExtractTemplateInfo :: End Response :: {}", response != null ? response.toString() : null);
+		logger.info("ExtractTemplateInfo :: End Response :: {}", response.toString());
 		return response;
 	}
 
