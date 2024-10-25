@@ -48,4 +48,9 @@ class ImageCompressionServiceTest extends ImageCompressionService {
 	protected byte[] resizeAndCompress(byte[] jp2000Bytes) {
 		return super.resizeAndCompress(jp2000Bytes);
 	}
+
+	@Override
+	protected byte[] getBirData(BIR bir) {
+		return super.getBirData(bir);
+	}
 }

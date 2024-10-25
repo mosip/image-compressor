@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import io.mosip.image.compressor.sdk.exceptions.SDKException;
 
-public class SDKExceptionTest {
-
+class SDKExceptionTest {
 	@Test
 	void testSDKExceptionWithMessage() {
 		String errorCode = "ERR001";

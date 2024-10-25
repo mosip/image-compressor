@@ -1,6 +1,8 @@
 package io.mosip.image.compressor.sdk.test;
 
 import static java.lang.Integer.parseInt;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +16,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -29,111 +32,165 @@ import io.mosip.kernel.biometrics.constant.ProcessedLevelType;
 import io.mosip.kernel.biometrics.entities.BDBInfo;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.biometrics.entities.RegistryIDType;
 import io.mosip.kernel.biometrics.entities.VersionType;
 import io.mosip.kernel.biometrics.model.Response;
+import junit.framework.Assert;
 
-public class SampleSDKTest1 {
-	private Logger LOGGER = LoggerFactory.getLogger(SampleSDKTest1.class);
+class SampleSDKTest1 {
+	Logger LOGGER = LoggerFactory.getLogger(SampleSDKTest1.class);
 
-    private static String sampleFace = "";
+	private String sampleFace = "";
 
-	public static void main(String[] args) {
-		SampleSDKTest1 test = new SampleSDKTest1();
-		test.testFace();
+    @BeforeEach
+    void setUp() {
+		sampleFace = SampleSDKTest.class.getResource("/sample_files/sample_face.xml").getPath();
+    }
+
+	@SuppressWarnings("deprecation")
+	@Test
+    void test_face() {
+    	try {
+			List<BiometricType> modalitiesToMatch = new ArrayList<>() {
+				{
+					add(BiometricType.FACE);
+					add(BiometricType.FINGER);
+					add(BiometricType.IRIS);
+				}
+			};
+			BiometricRecord sampleRecord = xmlFileToBiometricRecord(sampleFace);
+
+			ImageCompressorSDKV2 sampleSDK = new ImageCompressorSDKV2();
+			Response<BiometricRecord> response = sampleSDK.extractTemplate(sampleRecord, modalitiesToMatch,
+					new HashMap<>());
+			if (response != null && response.getResponse() != null) {
+				BiometricRecord compressedRecord = response.getResponse();
+				LOGGER.info("Response {}", compressedRecord);
+
+				Assert.assertEquals("Should be Raw",
+						compressedRecord.getSegments().get(0).getBdbInfo().getLevel().toString(),
+						ProcessedLevelType.RAW.toString());
+
+				LOGGER.info("BDB base64 encoded {}",
+						Base64.getEncoder().encodeToString(compressedRecord.getSegments().get(0).getBdb()));
+			}
+		} catch (ParserConfigurationException e) {
+			LOGGER.error("test_face", e);
+		} catch (IOException e) {
+			LOGGER.error("test_face", e);
+		} catch (SAXException e) {
+			LOGGER.error("test_face", e);
+		}
+    }
+    
+	@Test
+	void testFaceBIR() {
+		try {
+			List<BiometricType> modalitiesToMatch = new ArrayList<>() {
+				{
+					add(BiometricType.FACE);
+					add(BiometricType.FINGER);
+					add(BiometricType.IRIS);
+				}
+			};
+			BiometricRecord sample_record = xmlFileToBiometricRecord(sampleFace);
+			BIR birSegment = sample_record.getSegments().getFirst();
+			ImageCompressionServiceTest service = new ImageCompressionServiceTest(null, sample_record, modalitiesToMatch, null);
+			byte[] data = service.getBirData(birSegment);
+			
+			// Validate that data is not null
+	        assertNotNull(data, "The image data should not be null");
+	        
+	        // Optionally, add further checks on the data length, format, or content if known
+	        assertTrue(data.length > 0, "The image data should not be empty");
+	        
+	        LOGGER.info("testFaceBIR face image base64 encoded {}",
+					Base64.getEncoder().encodeToString(data));
+		} catch (Exception e) {
+			LOGGER.error("testFace", e);
+		}
 	}
+	
+    @SuppressWarnings({ "java:S1854", "unused" })
+	private BiometricRecord xmlFileToBiometricRecord(String path)
+			throws ParserConfigurationException, IOException, SAXException {
+		BiometricRecord biometricRecord = new BiometricRecord();
+		List<BIR> birSegments = new ArrayList<BIR>();
+		File fXmlFile = new File(path);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(fXmlFile);
+		doc.getDocumentElement().normalize();
+		LOGGER.debug("Root element :{}", doc.getDocumentElement().getNodeName());
+		Node rootBIRElement = doc.getDocumentElement();
+		NodeList childNodes = rootBIRElement.getChildNodes();
+		for (int temp = 0; temp < childNodes.getLength(); temp++) {
+			Node childNode = childNodes.item(temp);
+			if (childNode.getNodeName().equalsIgnoreCase("bir")) {
+				BIR.BIRBuilder bd = new BIR.BIRBuilder();
 
-	 public void Setup() {
-		 sampleFace = SampleSDKTest1.class.getResource("/sample_files/sample_face.xml").getPath();
-    }
-	 
-    public void testFace() {
-        try {
-            List<BiometricType> modalitiesToMatch = new ArrayList<>(){{
-                add(BiometricType.FACE);
-                add(BiometricType.FINGER);
-                add(BiometricType.IRIS);
-            }};
-            BiometricRecord sample_record = xmlFileToBiometricRecord(sampleFace);
+				/* Version */
+				Node nVersion = ((Element) childNode).getElementsByTagName("Version").item(0);
+				String major_version = ((Element) nVersion).getElementsByTagName("Major").item(0).getTextContent();
+				String minor_version = ((Element) nVersion).getElementsByTagName("Minor").item(0).getTextContent();
+				VersionType bir_version = new VersionType(parseInt(major_version), parseInt(minor_version));
+				bd.withVersion(bir_version);
 
-            ImageCompressorSDKV2 sampleSDK = new ImageCompressorSDKV2();
-            Response<BiometricRecord> response = sampleSDK.extractTemplate(sample_record, modalitiesToMatch, new HashMap<>());
-            if (response != null && response.getResponse() != null)
-            {
-            	BiometricRecord compressed_record = response.getResponse();
-                Assert.assertEquals("Should be Raw", compressed_record.getSegments().get(0).getBdbInfo().getLevel().toString(), ProcessedLevelType.RAW.toString());
-            }
-        } catch (ParserConfigurationException e) {
-			LOGGER.error("testFace", e);
-        } catch (IOException e) {
-			LOGGER.error("testFace", e);
-        } catch (SAXException e) {
-			LOGGER.error("testFace", e);
-        }
-    }
+				/* CBEFF Version */
+				Node nCBEFFVersion = ((Element) childNode).getElementsByTagName("Version").item(0);
+				String cbeff_major_version = ((Element) nCBEFFVersion).getElementsByTagName("Major").item(0)
+						.getTextContent();
+				String cbeff_minor_version = ((Element) nCBEFFVersion).getElementsByTagName("Minor").item(0)
+						.getTextContent();
+				VersionType cbeff_bir_version = new VersionType(parseInt(cbeff_major_version),
+						parseInt(cbeff_minor_version));
+				bd.withCbeffversion(cbeff_bir_version);
 
-    private BiometricRecord xmlFileToBiometricRecord(String path) throws ParserConfigurationException, IOException, SAXException {
-        BiometricRecord biometricRecord = new BiometricRecord();
-        List<BIR> birSegments = new ArrayList<>();
-        File fXmlFile = new File(path);
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(fXmlFile);
-        doc.getDocumentElement().normalize();
-        LOGGER.debug("Root element :{}", doc.getDocumentElement().getNodeName());
-        Node rootBIRElement = doc.getDocumentElement();
-        NodeList childNodes = rootBIRElement.getChildNodes();
-        for (int temp = 0; temp < childNodes.getLength(); temp++) {
-            Node childNode = childNodes.item(temp);
-            if(childNode.getNodeName().equalsIgnoreCase("bir")){
-                BIR.BIRBuilder bd = new BIR.BIRBuilder();
+				/* BDB Info */
+				Node nBDBInfo = ((Element) childNode).getElementsByTagName("BDBInfo").item(0);
+				String bdbInfoType = "";
+				String bdbInfoSubtype = "";
+				String bdbInfoFormat = "";
+				String bdbInfoCreationDate = "";
+				NodeList nBDBInfoChilds = nBDBInfo.getChildNodes();
+				for (int z = 0; z < nBDBInfoChilds.getLength(); z++) {
+					Node nBDBInfoChild = nBDBInfoChilds.item(z);
+					if (nBDBInfoChild.getNodeName().equalsIgnoreCase("Type")) {
+						bdbInfoType = nBDBInfoChild.getTextContent();
+					}
+					if (nBDBInfoChild.getNodeName().equalsIgnoreCase("Subtype")) {
+						bdbInfoSubtype = nBDBInfoChild.getTextContent();
+					}
+					if (nBDBInfoChild.getNodeName().equalsIgnoreCase("Format")) {
+						bdbInfoFormat = nBDBInfoChild.getTextContent();
+					}
+					if (nBDBInfoChild.getNodeName().equalsIgnoreCase("CreationDate")) {
+						bdbInfoCreationDate = nBDBInfoChild.getTextContent();
+					}
+				}
 
-                /* Version */
-                Node nVersion = ((Element) childNode).getElementsByTagName("Version").item(0);
-                String major_version = ((Element) nVersion).getElementsByTagName("Major").item(0).getTextContent();
-                String minor_version = ((Element) nVersion).getElementsByTagName("Minor").item(0).getTextContent();
-                VersionType bir_version = new VersionType(parseInt(major_version), parseInt(minor_version));
-                bd.withVersion(bir_version);
+				BDBInfo.BDBInfoBuilder bdbInfoBuilder = new BDBInfo.BDBInfoBuilder();
+				if (!bdbInfoFormat.isEmpty()) {
+					String[] info = bdbInfoFormat.split("\n");
+					bdbInfoBuilder.withFormat(new RegistryIDType(info[1].trim(), info[2].trim()));
+				}
+				bdbInfoBuilder.withType(Arrays.asList(BiometricType.fromValue(bdbInfoType)));
+				bdbInfoBuilder.withSubtype(Arrays.asList(bdbInfoSubtype));
+				BDBInfo bdbInfo = new BDBInfo(bdbInfoBuilder);
+				bd.withBdbInfo(bdbInfo);
 
-                /* CBEFF Version */
-                Node nCBEFFVersion = ((Element) childNode).getElementsByTagName("Version").item(0);
-                String cbeff_major_version = ((Element) nCBEFFVersion).getElementsByTagName("Major").item(0).getTextContent();
-                String cbeff_minor_version = ((Element) nCBEFFVersion).getElementsByTagName("Minor").item(0).getTextContent();
-                VersionType cbeff_bir_version = new VersionType(parseInt(cbeff_major_version), parseInt(cbeff_minor_version));
-                bd.withCbeffversion(cbeff_bir_version);
+				/* BDB */
+				String strBDB = ((Element) childNode).getElementsByTagName("BDB").item(0).getTextContent();
+				bd.withBdb(Base64.getDecoder().decode(strBDB));
 
-                /* BDB Info */
-                Node nBDBInfo = ((Element) childNode).getElementsByTagName("BDBInfo").item(0);
-                String bdb_info_type = "";
-                String bdb_info_subtype = "";
-                NodeList nBDBInfoChilds = nBDBInfo.getChildNodes();
-                for (int z=0; z < nBDBInfoChilds.getLength(); z++){
-                    Node nBDBInfoChild = nBDBInfoChilds.item(z);
-                    if(nBDBInfoChild.getNodeName().equalsIgnoreCase("Type")){
-                        bdb_info_type = nBDBInfoChild.getTextContent();
-                    }
-                    if(nBDBInfoChild.getNodeName().equalsIgnoreCase("Subtype")){
-                        bdb_info_subtype = nBDBInfoChild.getTextContent();
-                    }
-                }
+				/* Prepare BIR */
+				BIR bir = new BIR(bd);
 
-                BDBInfo.BDBInfoBuilder bdbInfoBuilder = new BDBInfo.BDBInfoBuilder();
-                bdbInfoBuilder.withType(Arrays.asList(BiometricType.fromValue(bdb_info_type)));
-                bdbInfoBuilder.withSubtype(Arrays.asList(bdb_info_subtype));
-                BDBInfo bdbInfo = new BDBInfo(bdbInfoBuilder);
-                bd.withBdbInfo(bdbInfo);
-
-                /* BDB */
-                byte[] nBDB = Base64.getDecoder().decode(((Element) childNode).getElementsByTagName("BDB").item(0).getTextContent());
-                bd.withBdb(nBDB);
-
-                /* Prepare BIR */
-                BIR bir = new BIR(bd);
-
-                /* Add BIR to list of segments */
-                birSegments.add(bir);
-            }
-        }
-        biometricRecord.setSegments(birSegments);
-        return biometricRecord;
-    }
+				/* Add BIR to list of segments */
+				birSegments.add(bir);
+			}
+		}
+		biometricRecord.setSegments(birSegments);
+		return biometricRecord;
+	}
 }

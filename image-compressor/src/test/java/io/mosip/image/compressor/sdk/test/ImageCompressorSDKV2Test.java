@@ -32,7 +32,7 @@ import io.mosip.kernel.biometrics.model.QualityCheck;
 import io.mosip.kernel.biometrics.model.Response;
 import io.mosip.kernel.biometrics.model.SDKInfo;
 
-public class ImageCompressorSDKV2Test {
+class ImageCompressorSDKV2Test {
 	private ImageCompressionServiceTest service;
     private ImageCompressorSDKV2 sdk;
     private Environment env;
