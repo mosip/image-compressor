@@ -71,8 +71,8 @@
 
 		<!-- Mosip kernel -->
 		<kernel.version>1.2.0.1</kernel.version>
-		<kernel.biometricsdk.version>1.2.0.1-B2</kernel.biometricsdk.version>
-		<biometrics-util.version>1.2.0.1-B2</biometrics-util.version>
+		<kernel.biometricsdk.version>1.2.0.1</kernel.biometricsdk.version>
+		<biometrics-util.version>1.2.0.1</biometrics-util.version>
 
 		<!-- slf4j -->
 		<slf4j.version>1.7.25</slf4j.version>
