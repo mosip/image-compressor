@@ -70,9 +70,9 @@
 		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
 
 		<!-- Mosip kernel -->
-		<kernel.version>1.2.0.1-SNAPSHOT</kernel.version>
-		<kernel.biometricsdk.version>1.2.0.1-B2</kernel.biometricsdk.version>
-		<biometrics-util.version>1.2.0.1-B2-SNAPSHOT</biometrics-util.version>
+		<kernel.version>1.2.0.1</kernel.version>
+		<kernel.biometricsdk.version>1.2.0.2</kernel.biometricsdk.version>
+		<biometrics-util.version>1.2.0.2</biometrics-util.version>
 
 		<!-- slf4j -->
 		<slf4j.version>1.7.25</slf4j.version>
