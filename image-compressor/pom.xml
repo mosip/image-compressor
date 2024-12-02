@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>image-compressor</artifactId>
 	<groupId>io.mosip.image.compressor</groupId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-beta.1-SNAPSHOT</version>
 	<name>image-compressor</name>
 	<description>Image Compressorimplementation of biometrics SDK</description>
 	<packaging>jar</packaging>
