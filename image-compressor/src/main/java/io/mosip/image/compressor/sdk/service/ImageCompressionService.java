@@ -168,7 +168,7 @@ public class ImageCompressionService extends SDKService {
 		}
 
 		LOGGER.info("Factor ratio Details");
-		LOGGER.info(String.format("orginal fx=%.2f, orginal fy=%.2f, Compression Ratio==%.2f ", (float)fxOrginal, (float)fyOrginal, (float)compression));
+		LOGGER.info(String.format("orginal fx=%.2f, orginal fy=%.2f, Compression Ratio==%.2f ", (double)fxOrginal, (double)fyOrginal, (double)compression));
 		
 		Imgproc.resize(src, dst, new Size(0, 0), fxOrginal, fyOrginal, Imgproc.INTER_AREA);
 		LOGGER.info("Resized Image Details");
