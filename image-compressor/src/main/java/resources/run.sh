@@ -1,0 +1,1 @@
+nohup java -Dloader.path=image-compressor-0.0.1-SNAPSHOT-jar-with-dependencies.jar -Dmosip.bio.image.compressor.resize.factor.fx=0.30f -Dmosip.bio.image.compressor.resize.factor.fy=0.30f -Dmosip.bio.image.compressor.compression.ratio=60 -Dbiosdk_bioapi_impl=io.mosip.image.compressor.sdk.impl.ImageCompressorSDKV2 -jar biosdk-services-1.2.0.1.jar &

@@ -33,22 +33,23 @@ import io.mosip.kernel.biometrics.entities.VersionType;
 import io.mosip.kernel.biometrics.model.Response;
 
 public class SampleSDKTest1 {
-	private Logger LOGGER = LoggerFactory.getLogger(SampleSDKTest1.class);
+    Logger LOGGER = LoggerFactory.getLogger(SampleSDKTest.class);
 
     private static String sampleFace = "";
 
 	public static void main(String[] args) {
+		// TODO Auto-generated method stub
 		SampleSDKTest1 test = new SampleSDKTest1();
-		test.testFace();
+		test.test_face();
 	}
 
 	 public void Setup() {
-		 sampleFace = SampleSDKTest1.class.getResource("/sample_files/sample_face.xml").getPath();
+		 sampleFace = SampleSDKTest.class.getResource("/sample_files/sample_face.xml").getPath();
     }
 	 
-    public void testFace() {
+    public void test_face() {
         try {
-            List<BiometricType> modalitiesToMatch = new ArrayList<>(){{
+            List<BiometricType> modalitiesToMatch = new ArrayList<BiometricType>(){{
                 add(BiometricType.FACE);
                 add(BiometricType.FINGER);
                 add(BiometricType.IRIS);
@@ -60,26 +61,26 @@ public class SampleSDKTest1 {
             if (response != null && response.getResponse() != null)
             {
             	BiometricRecord compressed_record = response.getResponse();
-                Assert.assertEquals("Should be Raw", compressed_record.getSegments().get(0).getBdbInfo().getLevel().toString(), ProcessedLevelType.RAW.toString());
+                Assert.assertEquals("Should be Intermediate", compressed_record.getSegments().get(0).getBdbInfo().getLevel().toString(), ProcessedLevelType.RAW.toString());
             }
         } catch (ParserConfigurationException e) {
-			LOGGER.error("testFace", e);
+            e.printStackTrace();
         } catch (IOException e) {
-			LOGGER.error("testFace", e);
+            e.printStackTrace();
         } catch (SAXException e) {
-			LOGGER.error("testFace", e);
+            e.printStackTrace();
         }
     }
 
     private BiometricRecord xmlFileToBiometricRecord(String path) throws ParserConfigurationException, IOException, SAXException {
         BiometricRecord biometricRecord = new BiometricRecord();
-        List<BIR> birSegments = new ArrayList<>();
+        List bir_segments = new ArrayList();
         File fXmlFile = new File(path);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
         doc.getDocumentElement().normalize();
-        LOGGER.debug("Root element :{}", doc.getDocumentElement().getNodeName());
+        LOGGER.debug("Root element :" + doc.getDocumentElement().getNodeName());
         Node rootBIRElement = doc.getDocumentElement();
         NodeList childNodes = rootBIRElement.getChildNodes();
         for (int temp = 0; temp < childNodes.getLength(); temp++) {
@@ -123,6 +124,9 @@ public class SampleSDKTest1 {
                 bd.withBdbInfo(bdbInfo);
 
                 /* BDB */
+                //String nBDB = ((Element) childNode).getElementsByTagName("BDB").item(0).getTextContent();
+                //bd.withBdb(nBDB.getBytes("UTF-8"));
+                
                 byte[] nBDB = Base64.getDecoder().decode(((Element) childNode).getElementsByTagName("BDB").item(0).getTextContent());
                 bd.withBdb(nBDB);
 
@@ -130,10 +134,10 @@ public class SampleSDKTest1 {
                 BIR bir = new BIR(bd);
 
                 /* Add BIR to list of segments */
-                birSegments.add(bir);
+                bir_segments.add(bir);
             }
         }
-        biometricRecord.setSegments(birSegments);
+        biometricRecord.setSegments(bir_segments);
         return biometricRecord;
     }
 
