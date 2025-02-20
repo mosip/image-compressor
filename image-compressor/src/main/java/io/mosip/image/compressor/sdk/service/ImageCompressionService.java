@@ -42,7 +42,7 @@ public class ImageCompressionService extends SDKService {
          * so we fall back to loadLocally() and return.
          */
 		//nu.pattern.OpenCV.loadLocally();
-		System.loadLibrary(org.opencv.core.Core.NATIVE_LIBRARY_NAME);
+		//System.loadLibrary(org.opencv.core.Core.NATIVE_LIBRARY_NAME);
 	}
 	
 	private BiometricRecord sample;
