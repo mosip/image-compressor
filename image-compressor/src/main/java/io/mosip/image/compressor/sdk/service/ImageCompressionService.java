@@ -73,10 +73,15 @@ public class ImageCompressionService extends SDKService {
 				// not validating ISO
 				byte[] faceBdb = getBirData(segment);
 
-				if (segment.getBirInfo() == null)
-					segment.setBirInfo(new BIRInfo(new BIRInfoBuilder().withPayload(segment.getBdb())));
-				else 
-					segment.getBirInfo().setPayload(segment.getBdb());
+				/*
+				 * Below Code can be removed if we require PayLoad information
+				 */
+				
+				/*
+				 * if (segment.getBirInfo() == null) segment.setBirInfo(new BIRInfo(new
+				 * BIRInfoBuilder().withPayload(segment.getBdb()))); else
+				 * segment.getBirInfo().setPayload(segment.getBdb());
+				 */				
 				
 				BDBInfo bdbInfo = segment.getBdbInfo();
 				if (bdbInfo != null) {
