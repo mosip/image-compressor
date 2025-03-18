@@ -26,10 +26,10 @@
 
 	<developers>
 		<developer>
-			<name>Mosip</name>
+			<name>mosip</name>
 			<email>mosip.emailnotifier@gmail.com</email>
-			<organization>io.mosip</organization>
-			<organizationUrl>https://github.com/mosip/image-compressor</organizationUrl>
+			<organization>MOSIP</organization>
+			<organizationUrl>https://www.mosip.io</organizationUrl>
 		</developer>
 	</developers>
 
@@ -202,6 +202,29 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven.surefire.plugin.version}</version>
+				<configuration>
+					<skipTests>${skipTests}</skipTests>
+					<skip>false</skip>
+					<argLine>
+						${argLine}
+						--add-modules=ALL-SYSTEM
+						--add-opens java.xml/jdk.xml.internal=ALL-UNNAMED
+						--add-opens java.base/java.lang.reflect=ALL-UNNAMED
+						--add-opens java.base/java.lang.stream=ALL-UNNAMED
+						--add-opens java.base/java.time=ALL-UNNAMED
+						--add-opens java.base/java.time.LocalDate=ALL-UNNAMED
+						--add-opens
+						java.base/java.time.LocalDateTime=ALL-UNNAMED
+						--add-opens
+						java.base/java.time.LocalDateTime.date=ALL-UNNAMED
+						--enable-preview
+					</argLine>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>
