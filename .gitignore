@@ -1,7 +1,7 @@
 *.classpath
 *.gitignore
 *.project
-.settings/*
+*.settings/*
 		
 # Compiled class file
 *.class
