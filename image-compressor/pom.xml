@@ -83,7 +83,7 @@
 		<!-- base64url codec -->
 		<commons-codec.version>1.15</commons-codec.version>
 		<!-- base64url codec -->
-		<apache.commons.version>3.11</apache.commons.version>
+		<apache.commons.version>3.18.0</apache.commons.version>
 		<fasterxml.jackson.version>2.10.1</fasterxml.jackson.version>
 		<hibernate.version>5.2.17.Final</hibernate.version>
 		<hibernate.validator.version>6.0.12.Final</hibernate.validator.version>
