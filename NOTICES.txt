@@ -1,0 +1,48 @@
+MOSIP
+Copyright (c) 2022
+Modular Open Source Identity Platform
+
+This product includes software developed at
+The Apache Software Foundation (https://www.apache.org/).
+
+The following components are licensed under the Apache License 2.0
+and require attribution. Their original NOTICE contents are retained
+as required by the license.
+
+
+===============================================================================
+Apache License 2.0 Components
+===============================================================================
+
+ • Apache Maven Compiler Plugin (3.11.0)
+ • Hibernate Validator
+ • Spring Boot Starter Validation
+ • Jackson Dataformat XML
+ • Jackson Databind
+ • Maven Surefire Plugin (2.22.0)
+ • Git Commit ID Plugin (3.0.1)
+ • Maven Assembly Plugin (3.1.1)
+ • Hibernate Validator Annotation Processor (6.0.12)
+ • Maven GPG Plugin (3.2.3)
+ • Apache Commons Lang3
+ • Apache Commons Codec
+ • Maven Javadoc Plugin (3.2.0)
+ • Maven Source Plugin (3.3.1)
+ • Central Publishing Maven Plugin (0.7.0)
+ • Jackson Module JAXB Annotations
+
+
+===============================================================================
+Notes
+===============================================================================
+
+Components licensed under MPL-2.0 (MOSIP Kernel, Biometrics API/Util,
+Image Decoder, Image Compressor), MIT (SLF4J API, jcl-over-slf4j,
+jul-to-slf4j, GitHub workflows), EPL-1.0 / EPL-2.0 (JUnit Vintage,
+JaCoCo), BSD-3-Clause and BSD-3-Clause-No-Nuclear (JAI ImageIO),
+and LGPL-3.0 (Sonar Maven Plugin) do not require attribution in this
+NOTICE file. Their license texts are included separately.
+
+Full license texts for all third-party components are available in the
+`license/` directory or from the respective project repositories.
+
