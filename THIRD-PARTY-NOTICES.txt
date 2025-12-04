@@ -68,7 +68,7 @@ Homepage: https://github.com/FasterXML/jackson-dataformat-xml
 ================================================================================
 Package: org.junit.vintage:junit-vintage-engine
 Version: Not specified
-License: EPL-1.0 (Inferred)
+License: EPL-2.0 (Inferred)
 Homepage: https://junit.org
 ================================================================================
 
@@ -82,7 +82,7 @@ Homepage: https://maven.apache.org/surefire
 ================================================================================
 Package: pl.project13.maven:git-commit-id-plugin
 Version: 3.0.1
-License: Apache License 2.0
+License: LGPL-3.0
 Homepage: https://github.com/git-commit-id/git-commit-id-maven-plugin
 ================================================================================
 
