@@ -1,0 +1,123 @@
+================================================================================
+COPYRIGHT NOTICES
+================================================================================
+
+This software incorporates components from the projects listed below. The
+original copyright notices have been preserved in accordance with the terms
+of their respective licenses:
+
+SLF4J JCL-over-SLF4J
+  Copyright (c) 2004-2024 QOS.ch Sarl (Switzerland)
+  Licensed under the MIT License
+
+SLF4J JUL-to-SLF4J
+  Copyright (c) 2004-2024 QOS.ch Sarl (Switzerland)
+  Licensed under the MIT License
+
+JUnit Vintage Engine
+  Copyright 2015-2025 the original author or authors
+  Licensed under the Eclipse Public License 2.0
+
+Hibernate Validator
+  Copyright 2009-2024 Red Hat, Inc. and Hibernate Contributors
+  Licensed under the Apache License, Version 2.0
+
+Hibernate Validator Annotation Processor
+  Copyright 2009-2024 Red Hat, Inc. and Hibernate Contributors
+  Licensed under the Apache License, Version 2.0
+
+Spring Boot Starter Validation
+  Copyright (c) 2012-2023 VMware, Inc.
+  Licensed under the Apache License, Version 2.0
+
+Jackson Databind
+  Copyright 2007-2024, Tatu Saloranta (tatu.saloranta@iki.fi)
+  Licensed under the Apache License, Version 2.0
+
+Jackson Dataformat XML
+  Copyright 2007-2024, Tatu Saloranta (tatu.saloranta@iki.fi)
+  Licensed under the Apache License, Version 2.0
+
+Jackson Module JAXB Annotations
+  Copyright 2007-2024, Tatu Saloranta (tatu.saloranta@iki.fi)
+  Licensed under the Apache License, Version 2.0
+
+Apache Commons Lang3
+  Copyright 2001-2024 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache Commons Codec
+  Copyright 2002-2024 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+JAI ImageIO JPEG2000
+  Copyright (c) 1999-2000 JJ2000 Partners
+  Copyright (c) 2005 Sun Microsystems, Inc. and Contributors
+  Licensed under JJ2000 License AND BSD 3-Clause License (No Nuclear Disclaimer)
+
+Apache Maven Compiler Plugin
+  Copyright 2001-2024 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache Maven Assembly Plugin
+  Copyright 2006-2024 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache Maven Surefire Plugin
+  Copyright 2004-2024 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache Maven Source Plugin
+  Copyright 2002-2024 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache Maven Javadoc Plugin
+  Copyright 2005-2024 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache Maven GPG Plugin
+  Copyright 2001-2024 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache Maven Deploy Plugin
+  Copyright 2004-2025 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+JaCoCo Maven Plugin
+  Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+  Licensed under the Eclipse Public License 2.0
+
+Git Commit ID Maven Plugin
+  Copyright (C) 2012-2024 Konrad Malawski and Contributors
+  Licensed under the GNU Lesser General Public License v3.0
+
+SonarQube Scanner Maven Plugin
+  Copyright (C) 2009-2024 SonarSource SA
+  Licensed under the GNU Lesser General Public License v3.0
+
+Sonatype Central Publishing Maven Plugin
+  Copyright (c) 2022-present Sonatype, Inc.
+  Licensed under the Apache License, Version 2.0
+
+MOSIP Kernel BOM
+  Copyright (c) 2018-2024 MOSIP
+  Licensed under the Mozilla Public License 2.0
+
+MOSIP Kernel Biometrics API
+  Copyright (c) 2018-2024 MOSIP
+  Licensed under the Mozilla Public License 2.0
+
+MOSIP Kernel Core
+  Copyright (c) 2018-2024 MOSIP
+  Licensed under the Mozilla Public License 2.0
+
+MOSIP Biometrics Utility
+  Copyright (c) 2018-2024 MOSIP
+  Licensed under the Mozilla Public License 2.0
+
+For complete license texts, please refer to:
+  • SPDX License Registry: https://spdx.org/licenses/
+  • Each package's official homepage listed in THIRD-PARTY-NOTICES.txt
+  • Maven Central metadata for version-specific license information
+
+================================================================================
