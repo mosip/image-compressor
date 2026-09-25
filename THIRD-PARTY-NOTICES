@@ -1,2 +1,7 @@
-Third-party open-source components and license elections for this product are
-documented in NOTICE (root) and licenses/NOTICE. See licenses/ for full texts.
+Third-party open-source components for this product are documented in:
+
+  NOTICE                 — MPL 2.0 compatibility matrix + summary
+  licenses/NOTICE        — COPYRIGHT NOTICES (per-component copyright + license)
+  licenses/*.txt         — Full license texts
+
+Versions match image-compressor/pom.xml (Spring Boot 4.1.1 parent).

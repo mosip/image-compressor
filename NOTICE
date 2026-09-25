@@ -92,4 +92,35 @@ MOSIP matrix: Use = No (still on classpath — exception or replace)
 - org.junit.jupiter / junit-vintage / junit:junit (EPL; test only)
 - ch.qos.logback (EPL-2.0 OR LGPL-2.1; Boot default logger, test/transitive)
 
-See licenses/NOTICE for the full election detail.
+See licenses/NOTICE for the full election detail and the COPYRIGHT NOTICES
+list (per-component copyright + license, old style).
+
+================================================================================
+COPYRIGHT NOTICES (summary)
+================================================================================
+
+Full per-jar copyright attributions live in licenses/NOTICE, including for
+example:
+
+JUnit Vintage Engine
+  Copyright 2015-2026 the original author or authors
+  Licensed under the Eclipse Public License 2.0
+
+Hibernate Validator
+  Copyright 2009-2026 Red Hat, Inc. and Hibernate Contributors
+  Licensed under the Apache License, Version 2.0
+
+Spring Boot / Spring Framework
+  Copyright (c) 2012-2026 Broadcom / VMware, Inc. and contributors
+  Licensed under the Apache License, Version 2.0
+
+OpenCV (org.openpnp)
+  Licensed under the BSD 3-Clause License
+
+JAI ImageIO JPEG2000
+  Licensed under BSD 3-Clause License (No Nuclear Disclaimer)
+
+MOSIP Kernel Core / Biometrics API / Biometrics Utility / this repository
+  Licensed under the Mozilla Public License 2.0
+
+…and all other compile / test / build dependencies listed in licenses/NOTICE.
