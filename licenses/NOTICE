@@ -4,120 +4,466 @@ COPYRIGHT NOTICES
 
 This software incorporates components from the projects listed below. The
 original copyright notices have been preserved in accordance with the terms
-of their respective licenses:
+of their respective licenses. Versions match image-compressor/pom.xml and
+Spring Boot 4.1.1. Product license: MPL 2.0 (see ../LICENSE). Compatibility
+matrix: ../NOTICE. Full license texts: this directory (licenses/).
 
-SLF4J JCL-over-SLF4J
-  Copyright (c) 2004-2024 QOS.ch Sarl (Switzerland)
-  Licensed under the MIT License
+--------------------------------------------------------------------------------
+MOSIP (MPL 2.0)
+--------------------------------------------------------------------------------
 
-SLF4J JUL-to-SLF4J
-  Copyright (c) 2004-2024 QOS.ch Sarl (Switzerland)
-  Licensed under the MIT License
+MOSIP Image Compressor
+  Copyright (c) MOSIP
+  Licensed under the Mozilla Public License 2.0
 
-JUnit Vintage Engine
-  Copyright 2015-2025 the original author or authors
-  Licensed under the Eclipse Public License 2.0
+MOSIP Kernel Core
+  Copyright (c) 2018-2026 MOSIP
+  Licensed under the Mozilla Public License 2.0
 
-Hibernate Validator
-  Copyright 2009-2024 Red Hat, Inc. and Hibernate Contributors
+MOSIP Kernel Biometrics API
+  Copyright (c) 2018-2026 MOSIP
+  Licensed under the Mozilla Public License 2.0
+
+MOSIP Biometrics Utility
+  Copyright (c) 2018-2026 MOSIP
+  Licensed under the Mozilla Public License 2.0
+
+--------------------------------------------------------------------------------
+Spring / Micrometer (Apache-2.0)
+--------------------------------------------------------------------------------
+
+Spring Boot
+  Copyright (c) 2012-2026 Broadcom / VMware, Inc. and contributors
   Licensed under the Apache License, Version 2.0
 
-Hibernate Validator Annotation Processor
-  Copyright 2009-2024 Red Hat, Inc. and Hibernate Contributors
+Spring Boot Autoconfigure / Starter / Starter Logging / Starter Validation
+  Copyright (c) 2012-2026 Broadcom / VMware, Inc. and contributors
   Licensed under the Apache License, Version 2.0
 
-Spring Boot Starter Validation
-  Copyright (c) 2012-2023 VMware, Inc.
+Spring Boot Jackson2 / Validation
+  Copyright (c) 2012-2026 Broadcom / VMware, Inc. and contributors
   Licensed under the Apache License, Version 2.0
 
-Jackson Databind
-  Copyright 2007-2024, Tatu Saloranta (tatu.saloranta@iki.fi)
+Spring Framework (spring-core, spring-context, spring-beans, spring-aop,
+spring-expression, spring-web, spring-tx, spring-jdbc, spring-orm, spring-aspects)
+  Copyright (c) 2002-2026 Broadcom / VMware, Inc. and contributors
+  Licensed under the Apache License, Version 2.0
+
+Spring Data JPA / Spring Data Commons
+  Copyright (c) 2011-2026 Broadcom / VMware, Inc. and contributors
+  Licensed under the Apache License, Version 2.0
+
+Spring Cloud Context
+  Copyright (c) 2014-2026 the original author or authors
+  Licensed under the Apache License, Version 2.0
+
+Spring Retry
+  Copyright (c) 2006-2026 the original author or authors
+  Licensed under the Apache License, Version 2.0
+
+Spring Security Crypto
+  Copyright (c) 2004-2026 the original author or authors
+  Licensed under the Apache License, Version 2.0
+
+Micrometer Observation / Commons / Core / Registry Prometheus / Tracing /
+Tracing Bridge Brave / Context Propagation
+  Copyright (c) 2017-2026 VMware, Inc. and contributors
+  Licensed under the Apache License, Version 2.0
+
+--------------------------------------------------------------------------------
+Jackson / JSON (Apache-2.0 unless noted)
+--------------------------------------------------------------------------------
+
+Jackson Databind / Core / Annotations
+  Copyright 2007-2026 Tatu Saloranta and FasterXML contributors
   Licensed under the Apache License, Version 2.0
 
 Jackson Dataformat XML
-  Copyright 2007-2024, Tatu Saloranta (tatu.saloranta@iki.fi)
+  Copyright 2007-2026 Tatu Saloranta and FasterXML contributors
   Licensed under the Apache License, Version 2.0
 
-Jackson Module JAXB Annotations
-  Copyright 2007-2024, Tatu Saloranta (tatu.saloranta@iki.fi)
+Jackson Module JAXB Annotations / Afterburner / Parameter Names /
+Datatype JDK8 / Datatype JSR310
+  Copyright 2007-2026 Tatu Saloranta and FasterXML contributors
   Licensed under the Apache License, Version 2.0
+
+Woodstox Core / StAX2 API
+  Copyright (c) FasterXML / Tatu Saloranta and contributors
+  Licensed under the Apache License, Version 2.0
+
+Gson
+  Copyright 2008 Google Inc.
+  Licensed under the Apache License, Version 2.0
+
+JSON-java (org.json)
+  Copyright (c) 2002 JSON.org
+  Licensed under the Public Domain / JSON License (permissive)
+
+--------------------------------------------------------------------------------
+Apache Commons / HTTP / Logging / PDF / Velocity
+--------------------------------------------------------------------------------
 
 Apache Commons Lang3
-  Copyright 2001-2024 The Apache Software Foundation
+  Copyright 2001-2026 The Apache Software Foundation
   Licensed under the Apache License, Version 2.0
 
 Apache Commons Codec
-  Copyright 2002-2024 The Apache Software Foundation
+  Copyright 2002-2026 The Apache Software Foundation
   Licensed under the Apache License, Version 2.0
+
+Apache Commons IO
+  Copyright 2002-2026 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache Commons Math3
+  Copyright 2001-2026 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache Commons Logging
+  Copyright 2001-2026 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache HttpClient / HttpCore (4.x)
+  Copyright 1999-2026 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache HttpClient5 / HttpCore5 / HttpCore5-H2
+  Copyright 1999-2026 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache Log4j API / Core / Log4j-to-SLF4J
+  Copyright 1999-2026 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache PDFBox / FontBox / PDFBox Tools / Debugger / XMPBox
+  Copyright 2002-2026 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache Velocity Engine Core
+  Copyright 2000-2026 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+Apache Tomcat Embed Core / EL / Annotations API
+  Copyright 1999-2026 The Apache Software Foundation
+  Licensed under the Apache License, Version 2.0
+
+SnakeYAML
+  Copyright (c) 2008-2026 SnakeYAML contributors
+  Licensed under the Apache License, Version 2.0
+
+--------------------------------------------------------------------------------
+Validation / Persistence / Hibernate
+--------------------------------------------------------------------------------
+
+Hibernate Validator
+  Copyright 2009-2026 Red Hat, Inc. and Hibernate Contributors
+  Licensed under the Apache License, Version 2.0
+
+Hibernate ORM Core / Hibernate HikariCP / Hibernate Models
+  Copyright (c) 2001-2026 Red Hat, Inc. and Hibernate Contributors
+  Licensed under the GNU Lesser General Public License v2.1
+  (MOSIP matrix: Use with MOSIP = No as product license; transitive via kernel-core)
+
+Jakarta Validation API / Annotation API / Persistence API /
+Transaction API / Activation API / Inject API / XML Bind API
+  Copyright (c) Eclipse Foundation and contributors
+  Licensed under Eclipse Public License 2.0 and/or related Eclipse licenses
+  (dual-licensed components: see package metadata; test/runtime transitive)
+
+JBoss Logging
+  Copyright 2010-2026 Red Hat, Inc. and/or its affiliates
+  Licensed under the Apache License, Version 2.0
+
+ClassMate
+  Copyright 2011-2026 FasterXML and contributors
+  Licensed under the Apache License, Version 2.0
+
+HikariCP
+  Copyright (C) 2013-2026 Brett Wooldridge
+  Licensed under the Apache License, Version 2.0
+
+javax.persistence-api / javax.transaction-api / javax.validation /
+javax.interceptor-api / javax.activation / jaxb-api
+  Copyright (c) Oracle and/or its affiliates
+  Licensed under CDDL 1.1 OR GPL-2.0-with-CPE (MOSIP elects CDDL-1.1)
+
+--------------------------------------------------------------------------------
+Image / Biometrics codecs
+--------------------------------------------------------------------------------
+
+OpenCV (org.openpnp)
+  Copyright (c) 2000-2026 Intel Corporation, Willow Garage, Itseez, OpenCV Foundation, and contributors
+  Licensed under the BSD 3-Clause License
 
 JAI ImageIO JPEG2000
   Copyright (c) 1999-2000 JJ2000 Partners
   Copyright (c) 2005 Sun Microsystems, Inc. and Contributors
-  Licensed under JJ2000 License AND BSD 3-Clause License (No Nuclear Disclaimer)
+  Licensed under BSD 3-Clause License (No Nuclear Disclaimer)
 
-Apache Maven Compiler Plugin
-  Copyright 2001-2024 The Apache Software Foundation
+JAI ImageIO Core
+  Copyright (c) Sun Microsystems, Inc. and Contributors
+  Licensed under BSD 3-Clause License (No Nuclear Disclaimer)
+
+JNBIS (WSQ)
+  Copyright (c) Mohammad Hosseini and contributors
   Licensed under the Apache License, Version 2.0
 
-Apache Maven Assembly Plugin
-  Copyright 2006-2024 The Apache Software Foundation
+Protocol Buffers Java (protobuf-java)
+  Copyright 2008 Google Inc.
+  Licensed under the BSD 3-Clause License
+
+--------------------------------------------------------------------------------
+Crypto / Security / JWT
+--------------------------------------------------------------------------------
+
+Bouncy Castle (bcprov / bcpkix / bcutil jdk18on)
+  Copyright (c) 2000-2026 The Legion of the Bouncy Castle Inc.
+  Licensed under the MIT / Bouncy Castle Licence (permissive)
+
+Java JWT (com.auth0)
+  Copyright (c) 2015-2026 Auth0, Inc. and contributors
+  Licensed under the MIT License
+
+OWASP Java Encoder
+  Copyright (c) 2012-2026 OWASP Foundation and contributors
+  Licensed under the BSD 3-Clause / related OWASP terms (see package)
+
+--------------------------------------------------------------------------------
+Google / Guava / ZXing / ICU
+--------------------------------------------------------------------------------
+
+Guava / FailureAccess / ListenableFuture / Error Prone Annotations /
+J2ObjC Annotations
+  Copyright (c) 2007-2026 Google Inc. and contributors
   Licensed under the Apache License, Version 2.0
 
-Apache Maven Surefire Plugin
-  Copyright 2004-2024 The Apache Software Foundation
+ZXing Core / JavaSE
+  Copyright 2007-2026 ZXing authors
   Licensed under the Apache License, Version 2.0
 
-Apache Maven Source Plugin
-  Copyright 2002-2024 The Apache Software Foundation
+ICU4J
+  Copyright (c) 2016-2026 Unicode, Inc. and others
+  Licensed under Unicode-DFS-2016 / ICU License
+
+libphonenumber
+  Copyright (c) 2009-2026 The Libphonenumber Authors
   Licensed under the Apache License, Version 2.0
 
-Apache Maven Javadoc Plugin
-  Copyright 2005-2024 The Apache Software Foundation
+--------------------------------------------------------------------------------
+SLF4J / Logback / Logstash
+--------------------------------------------------------------------------------
+
+SLF4J API
+  Copyright (c) 2004-2026 QOS.ch Sarl (Switzerland) and contributors
+  Licensed under the MIT License
+
+SLF4J JCL-over-SLF4J
+  Copyright (c) 2004-2026 QOS.ch Sarl (Switzerland)
+  Licensed under the MIT License
+
+SLF4J JUL-to-SLF4J
+  Copyright (c) 2004-2026 QOS.ch Sarl (Switzerland)
+  Licensed under the MIT License
+
+Logback Classic / Core
+  Copyright (c) 1999-2026 QOS.ch Sarl (Switzerland)
+  Licensed under EPL-2.0 OR LGPL-2.1
+  (MOSIP matrix: Use with MOSIP = No as product license; Boot default logger)
+
+Logstash Logback Encoder
+  Copyright (c) 2013-2026 the original author or authors
+  Licensed under the Apache License / related terms (see package)
+
+--------------------------------------------------------------------------------
+Swagger / JSON Schema / Scripting / Misc
+--------------------------------------------------------------------------------
+
+Swagger Annotations / Models (io.swagger 1.x)
+  Copyright 2015-2026 SmartBear Software / OpenAPI Initiative contributors
   Licensed under the Apache License, Version 2.0
 
-Apache Maven GPG Plugin
-  Copyright 2001-2024 The Apache Software Foundation
+JSON Schema Validator / Core / Jackson Coreutils / Msg-Simple / BTF /
+URI Template / Equivalence (java-json-tools)
+  Copyright (c) Francis Galiegue and contributors
+  Licensed under the Apache License / LGPLv3 dual (see package; MOSIP elects Apache-2.0 where dual)
+
+Rhino
+  Copyright (c) 1997-2026 Mozilla Foundation and contributors
+  Licensed under MPL-2.0
+
+AspectJ Weaver
+  Copyright (c) 1999-2026 Eclipse Foundation and contributors
+  Licensed under the Eclipse Public License 2.0
+  (MOSIP matrix: Use with MOSIP = No as product license)
+
+ANTLR 4 Runtime
+  Copyright (c) 2012-2026 Terence Parr, Sam Harwell, and contributors
+  Licensed under the BSD 3-Clause License
+
+Jsoup
+  Copyright (c) 2009-2026 Jonathan Hedley and contributors
+  Licensed under the MIT License
+
+Orika Core
+  Copyright (c) Orika contributors
   Licensed under the Apache License, Version 2.0
 
-Apache Maven Deploy Plugin
-  Copyright 2004-2025 The Apache Software Foundation
+OpenHTMLToPDF Core / PDFBox
+  Copyright (c) OpenHTMLToPDF contributors
+  Licensed under the GNU Lesser General Public License v3.0 /
+  Apache-2.0 components as packaged (see project NOTICE)
+
+MVEL2
+  Copyright (c) 2007-2026 The Codehaus and MVEL contributors
+  Licensed under the Apache License, Version 2.0
+
+HdrHistogram
+  Copyright (c) 2012-2026 Gil Tene and contributors
+  Licensed under BSD 2-Clause / CC0 (see package)
+
+Brave / Zipkin Brave Instrumentation / AWS / W3C Propagation
+  Copyright 2013-2026 The OpenZipkin Authors
+  Licensed under the Apache License, Version 2.0
+
+Prometheus Metrics (core / model / config / exposition)
+  Copyright 2012-2026 The Prometheus Authors
+  Licensed under the Apache License, Version 2.0
+
+Javassist
+  Copyright (C) 1999-2026 Shigeru Chiba and contributors
+  Licensed under MPL-1.1 / LGPL-2.1 / Apache-2.0 (triple; MOSIP elects Apache-2.0)
+
+FindBugs Annotations / JSR305 / JCIP Annotations
+  Copyright (c) University of Maryland / Bill Pugh and contributors
+  Licensed under the Apache License / BSD-style (see package)
+
+Joda-Time
+  Copyright 2001-2026 Stephen Colebourne and contributors
+  Licensed under the Apache License, Version 2.0
+
+JOpt Simple
+  Copyright (c) Paul Holser and contributors
+  Licensed under the MIT License
+
+JCommander
+  Copyright (c) 2010-2026 Cedric Beust and contributors
+  Licensed under the Apache License, Version 2.0
+
+Paranamer / Java SizeOf / Janino / Commons Compiler
+  Copyright (c) respective authors and contributors
+  Licensed under the BSD / Apache-2.0 terms of each package (see metadata)
+
+AOP Alliance
+  Public Domain
+
+--------------------------------------------------------------------------------
+GlassFish JAXB / Angus (EDL / BSD-style)
+--------------------------------------------------------------------------------
+
+GlassFish JAXB Runtime / Core / TXW2
+  Copyright (c) 2018-2026 Oracle and/or its affiliates / Eclipse Foundation
+  Licensed under Eclipse Distribution License 1.0 (BSD-style)
+
+Istack Commons Runtime
+  Copyright (c) Eclipse Foundation / Oracle
+  Licensed under Eclipse Distribution License 1.0
+
+Angus Activation
+  Copyright (c) Eclipse Foundation
+  Licensed under Eclipse Distribution License 1.0 / related Eclipse terms
+
+--------------------------------------------------------------------------------
+Test-only (not redistributed as product code)
+--------------------------------------------------------------------------------
+
+JUnit Vintage Engine / JUnit Jupiter / JUnit Platform
+  Copyright 2015-2026 the original author or authors
+  Licensed under the Eclipse Public License 2.0
+
+JUnit 4
+  Copyright 2002-2026 JUnit and contributors
+  Licensed under the Eclipse Public License 1.0
+
+Mockito Core / Mockito JUnit Jupiter
+  Copyright (c) 2007-2026 Mockito contributors
+  Licensed under the MIT License
+
+Byte Buddy / Byte Buddy Agent
+  Copyright (c) 2014-2026 Rafael Winterhalter and contributors
+  Licensed under the Apache License, Version 2.0
+
+Objenesis
+  Copyright (c) 2003-2026 Objenesis Team and contributors
+  Licensed under the Apache License, Version 2.0
+
+AssertJ Core
+  Copyright 2012-2026 AssertJ and contributors
+  Licensed under the Apache License, Version 2.0
+
+Hamcrest / Hamcrest Core
+  Copyright (c) 2000-2026 Hamcrest and contributors
+  Licensed under the BSD 3-Clause License
+
+Awaitility
+  Copyright 2010-2026 the original author or authors
+  Licensed under the Apache License, Version 2.0
+
+JSONAssert
+  Copyright 2010-2026 the original author or authors
+  Licensed under the Apache License, Version 2.0
+
+JSON Path / JSON Smart / Accessors Smart
+  Copyright (c) Jayway / net.minidev and contributors
+  Licensed under the Apache License, Version 2.0
+
+ASM
+  Copyright (c) 2000-2026 INRIA, France Telecom and contributors
+  Licensed under the BSD 3-Clause License
+
+XMLUnit Core
+  Copyright (c) XMLUnit contributors
+  Licensed under the Apache License / BSD (see package)
+
+Spring Boot Starter Test / Spring Test
+  Copyright (c) 2012-2026 Broadcom / VMware, Inc. and contributors
+  Licensed under the Apache License, Version 2.0
+
+OpenTest4J / API Guardian / JSpecify
+  Copyright (c) respective authors
+  Licensed under the Apache License, Version 2.0
+
+--------------------------------------------------------------------------------
+Build plugins (build-time only)
+--------------------------------------------------------------------------------
+
+Apache Maven Compiler / Surefire / Jar / Source / Javadoc / GPG / Deploy / Assembly
+  Copyright 2001-2026 The Apache Software Foundation
   Licensed under the Apache License, Version 2.0
 
 JaCoCo Maven Plugin
-  Copyright (c) 2009, 2023 Mountainminds GmbH & Co. KG and Contributors
+  Copyright (c) 2009-2026 Mountainminds GmbH & Co. KG and Contributors
   Licensed under the Eclipse Public License 2.0
 
 Git Commit ID Maven Plugin
-  Copyright (C) 2012-2024 Konrad Malawski and Contributors
+  Copyright (C) 2012-2026 the original author or authors
   Licensed under the GNU Lesser General Public License v3.0
+  (build-time only)
 
 SonarQube Scanner Maven Plugin
-  Copyright (C) 2009-2024 SonarSource SA
+  Copyright (C) 2009-2026 SonarSource SA
   Licensed under the GNU Lesser General Public License v3.0
+  (build-time only)
 
 Sonatype Central Publishing Maven Plugin
   Copyright (c) 2022-present Sonatype, Inc.
   Licensed under the Apache License, Version 2.0
 
-MOSIP Kernel BOM
-  Copyright (c) 2018-2024 MOSIP
-  Licensed under the Mozilla Public License 2.0
+--------------------------------------------------------------------------------
 
-MOSIP Kernel Biometrics API
-  Copyright (c) 2018-2024 MOSIP
-  Licensed under the Mozilla Public License 2.0
+For complete license texts:
+  - This directory (licenses/*.txt)
+  - SPDX License Registry: https://spdx.org/licenses/
+  - Maven Central metadata for version-specific license information
 
-MOSIP Kernel Core
-  Copyright (c) 2018-2024 MOSIP
-  Licensed under the Mozilla Public License 2.0
-
-MOSIP Biometrics Utility
-  Copyright (c) 2018-2024 MOSIP
-  Licensed under the Mozilla Public License 2.0
-
-For complete license texts, please refer to:
-  • SPDX License Registry: https://spdx.org/licenses/
-  • Each package's official homepage listed in THIRD-PARTY-NOTICES.txt
-  • Maven Central metadata for version-specific license information
-
-================================================================================
+Dual-license elections (never EPL / GPL / AGPL / LGPLv3 as the product license):
+  see this file header elections and ../NOTICE matrix.
