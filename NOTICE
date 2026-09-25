@@ -1,7 +1,95 @@
-NOTICE
+NOTICES
 
-This product includes third-party open-source software components.
-Licensing information for these components is provided in the
-THIRD-PARTY-NOTICES file and the LICENSES directory.
+Copyright (c) MOSIP.
+All rights reserved.
 
-No additional third-party notices are required.
+This project is MPL 2.0 (see LICENSE). Third-party versions match pom.xml and
+Spring Boot 4.1.1. Full texts and MOSIP dual-license elections: licenses/.
+
+===============================================================================
+Compatible open-source licenses (MPL 2.0 / Use with MOSIP)
+===============================================================================
+
+License                         Compatible with MPL 2.0?   Use with MOSIP?   MOSIP Comments
+------------------------------  -------------------------  ----------------  --------------
+BSD (2-Clause, 3-Clause)        Yes                        Yes               Code can be combined freely.
+MIT                             Yes                        Yes               Code can be combined freely.
+Apache-2.0                      Yes                        Yes               Both licenses are permissive and compatible. Ensure attribution requirements are met.
+MPL-2.0                         Yes                        Yes               Code can be combined freely.
+EPL                             No                         No                EPL is generally incompatible with MPL due to differing requirements.
+LGPLv3                          Yes                        No                LGPLv3 works can be included, but LGPLv3 terms may apply to the combined work.
+GPLv2                           No                         No                GPLv2 lacks explicit compatibility with MPL 2.0.
+GPLv3                           Yes                        No                MPL 2.0 can be included with GPLv3 in larger works, but the resulting combined work must be GPLv3.
+AGPLv3                          Yes                        No                Similar compatibility as GPLv3. Combined work must adhere to AGPLv3.
+Creative Commons (general)      No                         No                Not designed for software.
+ISC                             Yes                        Yes               Permissive. Keep ISC license text and attribution; overall project may be MPL 2.0.
+Python-2.0                      Yes                        Yes               May include Python-2.0 code; comply with both licenses.
+AFL-2.0                         No                         No                Clauses conflict with MPL 2.0; incompatible for redistribution under a unified license.
+AFL-2.1                         Yes                        Yes               Keep AFL 2.1 notice + license + attribution; AFL code stays AFL, MPL code stays MPL.
+ODC-By-1.0                      No                         No                Database license; incompatible with MPL 2.0 software licensing.
+CDDL-1.0 / CDDL-1.1             Yes                        Yes               Weak copyleft coexistence: each file keeps its original license; identify both in docs.
+Unicode-DFS-2016                Yes                        Yes               Keep Unicode license + notice; identify which files are Unicode vs MPL.
+BlueOak-1.0.0                   Yes                        Yes               Permissive; keep original license text or link with distributed software.
+OFL-1.1                         Yes                        Yes               Fonts; include full OFL-1.1 text when distributing fonts (modified or not).
+CC-BY-4.0                       —                          —                To be reviewed. Designed for creative works (text/images/music), not software.
+Zlib                            Yes                        Yes               Distributed copies / substantial portions must include the zlib License text.
+0BSD                            Yes                        Yes               Permissive; broad use/modification/distribution without significant restrictions.
+
+CDDL-1.1 treated as CDDL-1.0 successor. Unicode-3.0 treated as Unicode-DFS-2016
+successor. Dual-licensed jars: MOSIP elects an allowed option (never EPL, GPL,
+AGPL, LGPLv3, or Creative Commons as the product license).
+
+Notes on selected rows:
+- ISC: Include the ISC license text; provide attribution to ISC authors.
+- AFL-2.1: Include AFL 2.1 license notice/copy; attribute original authors; document which parts are AFL vs MPL.
+- CDDL: Include both MPL 2.0 and CDDL texts; clarify which files are under which license.
+- Unicode-DFS-2016: Do not strip Unicode headers; keep Unicode notice/disclaimers visible.
+- OFL-1.1: Always ship the full OFL text with font distributions.
+
+===========================
+MIT License (licenses/MIT.txt)
+===========
+
+- org.slf4j:slf4j-api (Boot-managed)
+- org.mockito:mockito-core (Boot-managed; test)
+
+===========================
+Apache-2.0 (licenses/Apache-2.0.txt)
+===========================
+
+- Spring Boot 4.1.1 / Spring Framework (Boot parent)
+- org.apache.commons:commons-lang3 (version in pom.xml; CVE-2025-48924 override)
+- commons-codec:commons-codec (Boot-managed)
+- net.minidev:json-smart (version in pom.xml; CVE-2024-57699 override; test transitive)
+- Maven build plugins (compiler, surefire, jar, source, javadoc, gpg, deploy, assembly)
+
+===========================
+BSD-3-Clause (licenses/BSD-3-Clause.txt)
+===========================
+
+- org.openpnp:opencv (version in pom.xml)
+- com.google.protobuf:protobuf-java (version in pom.xml; CVE-2024-7254 override)
+
+===========================
+BSD-3-Clause-No-Nuclear (licenses/BSD-3-Clause-No-Nuclear-License.txt)
+===========================
+
+- com.github.jai-imageio:jai-imageio-jpeg2000 (version in pom.xml)
+
+===========================
+Mozilla Public License 2.0 (LICENSE)
+===========================
+
+- This repository (image-compressor)
+- io.mosip.kernel:kernel-core (version in pom.xml)
+- io.mosip.kernel:kernel-biometrics-api (version in pom.xml)
+- io.mosip.biometric.util:biometrics-util (version in pom.xml)
+
+===========================
+MOSIP matrix: Use = No (still on classpath — exception or replace)
+===========================
+
+- org.junit.jupiter / junit-vintage / junit:junit (EPL; test only)
+- ch.qos.logback (EPL-2.0 OR LGPL-2.1; Boot default logger, test/transitive)
+
+See licenses/NOTICE for the full election detail.

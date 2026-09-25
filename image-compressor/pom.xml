@@ -1,37 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>image-compressor</artifactId>
+
+	<!--
+		Parent = spring-boot-starter-parent 4.1.1.
+		Do NOT import kernel-bom — Boot 4.1.1 is the BOM equivalent; MOSIP
+		artifacts are pinned explicitly below.
+	-->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>4.1.1</version>
+		<relativePath />
+	</parent>
+
 	<groupId>io.mosip.image.compressor</groupId>
-	<version>0.1.0-SNAPSHOT</version>
-	<name>image-compressor</name>
-	<description>Image Compressorimplementation of biometrics SDK</description>
+	<artifactId>image-compressor</artifactId>
+	<version>0.1.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
+	<name>image-compressor</name>
+	<description>
+		MOSIP biometric Image Compressor SDK — plugin JAR implementing IBioApiV2
+		(extractTemplate only). Decodes ISO/IEC 19794-5:2011 face BIR → JPEG2000,
+		resizes/compresses via OpenCV, re-encodes to ISO 19794-5:2011. Loaded by
+		biosdk-services (biosdk_class / biosdk_bioapi_impl). JDK 21, Spring Boot 4.1.1,
+		no kernel-bom. Depends on kernel-core / kernel-biometrics-api / biometrics-util
+		1.4.1-SNAPSHOT.
+	</description>
 	<url>https://github.com/mosip/image-compressor</url>
+	<properties>
+		<!-- ── Java ─────────────────────────────────────────────────────────── -->
+		<java.version>21</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Empty default required for Surefire late replacement @{argLine} (JaCoCo agent). -->
+		<argLine />
+		<skipTests>false</skipTests>
 
-	<licenses>
-		<license>
-			<name>MPL 2.0</name>
-			<url>https://www.mozilla.org/en-US/MPL/2.0/</url>
-		</license>
-	</licenses>
+		<!-- ── Maven plugins & build tooling (Boot 4.1.1 aligned) ───────────── -->
+		<maven.compiler.plugin.version>3.16.0</maven.compiler.plugin.version>
+		<maven.jar.plugin.version>3.5.1</maven.jar.plugin.version>
+		<maven.surefire.plugin.version>3.6.0</maven.surefire.plugin.version>
+		<maven.jacoco.version>0.8.15</maven.jacoco.version>
+		<maven.sonar.plugin.version>5.8.0.7211</maven.sonar.plugin.version>
+		<maven.javadoc.version>3.12.0</maven.javadoc.version>
+		<maven.deploy.plugin.version>3.1.4</maven.deploy.plugin.version>
+		<maven.source.plugin.version>3.4.0</maven.source.plugin.version>
+		<maven.gpg.plugin.version>3.2.8</maven.gpg.plugin.version>
+		<!-- kattu CI greps pl.project13.maven:git-commit-id-plugin -->
+		<git.commit.id.plugin.version>4.9.10</git.commit.id.plugin.version>
+		<central.publishing.maven.plugin.version>0.11.0</central.publishing.maven.plugin.version>
+		<maven.assembly.plugin.version>3.7.1</maven.assembly.plugin.version>
 
-	<scm>
-		<connection>scm:git:git://github.com/mosip/image-compressor.git</connection>
-		<developerConnection>scm:git:ssh://github.com:mosip/image-compressor.git</developerConnection>
-		<url>https://github.com/mosip/image-compressor</url>
-		<tag>HEAD</tag>
-	</scm>
+		<!-- Sonar / JaCoCo -->
+		<sonar.coverage.exclusions>**/constant/**,**/exceptions/**,**/impl/ImageCompressorSDK.java</sonar.coverage.exclusions>
+		<sonar.cpd.exclusions>**/constant/**</sonar.cpd.exclusions>
+		<!-- Instruction + line coverage gate on non-excluded packages -->
+		<jacoco.coverage.ratio>0.90</jacoco.coverage.ratio>
 
-	<developers>
-		<developer>
-			<name>mosip</name>
-			<email>mosip.emailnotifier@gmail.com</email>
-			<organization>MOSIP</organization>
-			<organizationUrl>https://www.mosip.io</organizationUrl>
-		</developer>
-	</developers>
+		<!-- ── MOSIP (external — no kernel-bom) ─────────────────────────────── -->
+		<!-- Install SNAPSHOTs locally or use the Central snapshot repository. -->
+		<kernel.core.version>1.4.1-SNAPSHOT</kernel.core.version>
+		<kernel.biometrics.api.version>1.4.1-SNAPSHOT</kernel.biometrics.api.version>
+		<mosip.biometrics.util.version>1.4.1-SNAPSHOT</mosip.biometrics.util.version>
+
+		<!-- ── Third-party (Maven Central) ─────────────────────────────────── -->
+		<!-- Source: https://central.sonatype.com/artifact/com.github.jai-imageio/jai-imageio-jpeg2000 -->
+		<jai.imageio.jpeg2000.version>1.4.0</jai.imageio.jpeg2000.version>
+		<!-- Source: https://central.sonatype.com/artifact/org.openpnp/opencv -->
+		<openpnp.opencv.version>4.9.0-0</openpnp.opencv.version>
+
+		<!--
+			Security overrides (transitive / Boot-managed):
+			CVE-2024-7254 → protobuf-java ≥ 4.28.2 (nested groups / StackOverflow)
+			CVE-2025-48924 → commons-lang3 ≥ 3.18.0 (ClassUtils.getClass StackOverflow)
+			CVE-2024-57699 → json-smart ≥ 2.5.2 (JSON '{' stack exhaustion DoS)
+			CVE-2025-22235 → spring-boot-actuator-autoconfigure ≥ 4.0.4 (EndpointRequest null/**)
+			CVE-2024-38821 / CVE-2026-22732 / CVE-2024-38827 → spring-security ≥ 7.0.6
+			CVE-2026-27830 → c3p0 ≥ 0.14.0 (unsafe Java serialization of userOverridesAsString)
+			Boot parent property commons-lang3.version / spring-security.version overridden here.
+		-->
+		<protobuf-java.version>4.28.2</protobuf-java.version>
+		<commons-lang3.version>3.18.0</commons-lang3.version>
+		<json-smart.version>2.5.2</json-smart.version>
+		<!-- Boot 4.1.1 ships Spring Security 7.1.x; pin floor for Mend / older transitive pulls -->
+		<spring-security.version>7.0.6</spring-security.version>
+		<c3p0.version>0.14.0</c3p0.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!--
+				kernel-core: Shared MOSIP kernel APIs (BaseUncheckedException, utilities).
+				Pinned explicitly — do NOT import kernel-bom (Boot 4.1.1 is the BOM equivalent).
+				License: MPL-2.0.
+			-->
+			<dependency>
+				<groupId>io.mosip.kernel</groupId>
+				<artifactId>kernel-core</artifactId>
+				<version>${kernel.core.version}</version>
+			</dependency>
+			<!--
+				kernel-biometrics-api: Biometric SPI (IBioApi / IBioApiV2), BIR entities.
+				Scope provided at runtime by biosdk-services host. License: MPL-2.0.
+			-->
+			<dependency>
+				<groupId>io.mosip.kernel</groupId>
+				<artifactId>kernel-biometrics-api</artifactId>
+				<version>${kernel.biometrics.api.version}</version>
+			</dependency>
+			<!--
+				biometrics-util: ISO/IEC 19794 face encode↔decode (FaceDecoder / FaceEncoder).
+				License: MPL-2.0.
+			-->
+			<dependency>
+				<groupId>io.mosip.biometric.util</groupId>
+				<artifactId>biometrics-util</artifactId>
+				<version>${mosip.biometrics.util.version}</version>
+			</dependency>
+			<!--
+				opencv (org.openpnp): Native OpenCV for JP2 resize + imencode.
+				License: BSD-3-Clause.
+			-->
+			<dependency>
+				<groupId>org.openpnp</groupId>
+				<artifactId>opencv</artifactId>
+				<version>${openpnp.opencv.version}</version>
+			</dependency>
+			<!--
+				jai-imageio-jpeg2000: JPEG2000 codec (also transitive via biometrics-util).
+				License: BSD-3-Clause-No-Nuclear.
+			-->
+			<dependency>
+				<groupId>com.github.jai-imageio</groupId>
+				<artifactId>jai-imageio-jpeg2000</artifactId>
+				<version>${jai.imageio.jpeg2000.version}</version>
+			</dependency>
+			<!--
+				protobuf-java: Force CVE-safe version even if a transitive pulls an older line
+				(CVE-2024-7254). License: BSD-3-Clause.
+			-->
+			<dependency>
+				<groupId>com.google.protobuf</groupId>
+				<artifactId>protobuf-java</artifactId>
+				<version>${protobuf-java.version}</version>
+			</dependency>
+			<!--
+				json-smart: CVE-2024-57699 (DoS via nested '{'). Often pulled by json-path (test).
+				License: Apache-2.0.
+			-->
+			<dependency>
+				<groupId>net.minidev</groupId>
+				<artifactId>json-smart</artifactId>
+				<version>${json-smart.version}</version>
+			</dependency>
+			<!--
+				spring-boot-actuator-autoconfigure: CVE-2025-22235 (EndpointRequest null/**).
+				Align with Boot parent 4.1.1 (≥ Mend floor 4.0.4). Not used by this plugin JAR.
+			-->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-actuator-autoconfigure</artifactId>
+				<version>${project.parent.version}</version>
+			</dependency>
+			<!--
+				c3p0: CVE-2026-27830 (Java deserialization of userOverridesAsString).
+				Excluded from kernel-core below; pin kept if anything reintroduces it.
+				License: EPL-1.0 / LGPL-2.1.
+			-->
+			<dependency>
+				<groupId>com.mchange</groupId>
+				<artifactId>c3p0</artifactId>
+				<version>${c3p0.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<!--
+			Spring: @Component / Environment / EnableAutoConfiguration.
+			This is a plugin JAR (not a Boot application) — no spring-boot:repackage.
+		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+
+		<!-- MOSIP -->
+		<!-- SPI only — provided by biosdk-services host at runtime -->
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-biometrics-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- FaceDecoder / FaceEncoder (ISO 19794-5) -->
+		<dependency>
+			<groupId>io.mosip.biometric.util</groupId>
+			<artifactId>biometrics-util</artifactId>
+		</dependency>
+		<!-- BaseUncheckedException (SDKException) — exclude unused heavy kernel-core surface -->
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-core</artifactId>
+			<exclusions>
+				<!-- Not needed by this plugin JAR; also drops CVE-noisy actuator / security / pool stacks -->
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-web</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-security</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-data-jpa</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-jdbc</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-actuator-autoconfigure</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-actuator</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.security</groupId>
+					<artifactId>spring-security-web</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.security</groupId>
+					<artifactId>spring-security-config</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.security</groupId>
+					<artifactId>spring-security-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.quartz-scheduler</groupId>
+					<artifactId>quartz</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.mchange</groupId>
+					<artifactId>c3p0</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.mchange</groupId>
+					<artifactId>mchange-commons-java</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Image processing -->
+		<dependency>
+			<groupId>org.openpnp</groupId>
+			<artifactId>opencv</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jai-imageio</groupId>
+			<artifactId>jai-imageio-jpeg2000</artifactId>
+		</dependency>
+
+		<!--
+			Utils — versions from Boot parent, with commons-lang3 overridden to 3.18.0
+			(CVE-2025-48924) via ${commons-lang3.version}.
+		-->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- Runs legacy org.junit.Test (JUnit 4) classes alongside Jupiter -->
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 	<distributionManagement>
 		<snapshotRepository>
@@ -44,139 +312,27 @@
 		</repository>
 	</distributionManagement>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>21</java.version>
-
-		<!-- maven -->
-		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<maven.compiler.version>3.11.0</maven.compiler.version>
-		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
-		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
-		<maven.javadoc.plugin.version>3.2.0</maven.javadoc.plugin.version>
-		<maven.shade.plugin.version>2.3</maven.shade.plugin.version>
-		<jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
-		<maven.deploy.plugin.version>3.1.1</maven.deploy.plugin.version>
-		<maven.source.plugin.version>3.3.1</maven.source.plugin.version>
-		<maven.javadoc.plugin.version>3.2.0</maven.javadoc.plugin.version>
-		<maven.gpg.plugin.version>3.2.3</maven.gpg.plugin.version>
-		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
-		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
-		<maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
-		<maven.assembly.plugin.version>3.1.1</maven.assembly.plugin.version>
-		<central.publishing.maven.plugin.version>0.7.0</central.publishing.maven.plugin.version>
-		<spring.boot.maven.plugin.version>3.2.5</spring.boot.maven.plugin.version>
-		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
-
-		<!-- git -->
-		<git.commit.id.plugin.version>3.0.1</git.commit.id.plugin.version>
-
-		<!-- Mosip kernel -->
-		<kernel.bom.version>1.3.1-rc.1</kernel.bom.version>
-		<kernel.core.version>1.3.1-rc.1</kernel.core.version>
-		<kernel.biometrics.api.version>1.3.1</kernel.biometrics.api.version>
-		<biometrics-util.version>1.3.1</biometrics-util.version>
-
-		<!-- utilities -->
-		<jai.imageio.jpeg2000.version>1.3.0</jai.imageio.jpeg2000.version>
-		<!-- base64url codec -->
-		<commons-codec.version>1.15</commons-codec.version>
-		<!-- base64url codec -->
-		<apache.commons.version>3.11</apache.commons.version>
-		<hibernate.version>5.2.17.Final</hibernate.version>
-		<hibernate.validator.version>6.0.12.Final</hibernate.validator.version>
-	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>io.mosip.kernel</groupId>
-				<artifactId>kernel-bom</artifactId>
-				<version>${kernel.bom.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-validation</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-biometrics-api</artifactId>
-			<version>${kernel.biometrics.api.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.mosip.biometric.util</groupId>
-			<artifactId>biometrics-util</artifactId>
-			<version>${biometrics-util.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jul-to-slf4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-		</dependency>
-		<!--
-		https://mvnrepository.com/artifact/com.github.jai-imageio/jai-imageio-jpeg2000 -->
-		<dependency>
-			<groupId>com.github.jai-imageio</groupId>
-			<artifactId>jai-imageio-jpeg2000</artifactId>
-			<version>${jai.imageio.jpeg2000.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-xml</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.module</groupId>
-			<artifactId>jackson-module-jaxb-annotations</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.validator</groupId>
-			<artifactId>hibernate-validator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator-annotation-processor</artifactId>
-			<version>${hibernate.validator.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.mosip.kernel</groupId>
-			<artifactId>kernel-core</artifactId>
-			<version>${kernel.core.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId>
-		</dependency>
-	</dependencies>
+	<repositories>
+		<repository>
+			<id>ossrh</id>
+			<name>Central Snapshots</name>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
+			<!-- Libraries only — do not bind spring-boot:repackage (no main class). -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven.compiler.version}</version>
+				<version>${maven.compiler.plugin.version}</version>
 				<configuration>
 					<release>${java.version}</release>
 					<compilerArgs>
@@ -184,6 +340,7 @@
 					</compilerArgs>
 				</configuration>
 			</plugin>
+			<!-- Optional fat JAR for biosdk-services loader_path without resolving transitive deps -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -210,18 +367,16 @@
 				<configuration>
 					<skipTests>${skipTests}</skipTests>
 					<skip>false</skip>
+					<!-- JDK 21: @{argLine} keeps JaCoCo agent; enable-preview for Java 21 -->
 					<argLine>
-						${argLine}
+						@{argLine}
 						--add-modules=ALL-SYSTEM
 						--add-opens java.xml/jdk.xml.internal=ALL-UNNAMED
+						--add-opens java.base/java.lang=ALL-UNNAMED
 						--add-opens java.base/java.lang.reflect=ALL-UNNAMED
 						--add-opens java.base/java.lang.stream=ALL-UNNAMED
 						--add-opens java.base/java.time=ALL-UNNAMED
-						--add-opens java.base/java.time.LocalDate=ALL-UNNAMED
-						--add-opens
-						java.base/java.time.LocalDateTime=ALL-UNNAMED
-						--add-opens
-						java.base/java.time.LocalDateTime.date=ALL-UNNAMED
+						--add-opens java.base/java.util=ALL-UNNAMED
 						--enable-preview
 					</argLine>
 				</configuration>
@@ -229,31 +384,72 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco.maven.plugin.version}</version>
+				<version>${maven.jacoco.version}</version>
 				<configuration>
-					<append>true</append>
+					<excludes>
+						<exclude>**/constant/**</exclude>
+						<exclude>**/exceptions/**</exclude>
+						<!-- Deprecated V1 entry point (scheduled removal) -->
+						<exclude>**/impl/ImageCompressorSDK.class</exclude>
+					</excludes>
 				</configuration>
 				<executions>
 					<execution>
-						<id>agent-for-ut</id>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
 					</execution>
 					<execution>
-						<id>agent-for-it</id>
-						<goals>
-							<goal>prepare-agent-integration</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>jacoco-site</id>
-						<phase>verify</phase>
+						<id>report</id>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>jacoco-check</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<rule>
+									<element>BUNDLE</element>
+									<limits>
+										<limit>
+											<counter>INSTRUCTION</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>${jacoco.coverage.ratio}</minimum>
+										</limit>
+										<limit>
+											<counter>LINE</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>${jacoco.coverage.ratio}</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+						</configuration>
+					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${maven.jar.plugin.version}</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Project-Name>${project.name}</Project-Name>
+							<Project-Version>${project.version}</Project-Version>
+						</manifestEntries>
+					</archive>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -271,7 +467,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>${maven.javadoc.plugin.version}</version>
+				<version>${maven.javadoc.version}</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -282,6 +478,8 @@
 				</executions>
 				<configuration>
 					<doclint>none</doclint>
+					<failOnError>false</failOnError>
+					<failOnWarnings>false</failOnWarnings>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -304,7 +502,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 			<plugin>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>${maven.deploy.plugin.version}</version>
@@ -343,19 +540,19 @@
 				</executions>
 				<configuration>
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
-					<generateGitPropertiesFilename>
-						${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
 					<includeOnlyProperties>
 						<includeOnlyProperty>^git.build.(time|version)$</includeOnlyProperty>
 						<includeOnlyProperty>^git.commit.id.(abbrev|full)$</includeOnlyProperty>
 					</includeOnlyProperties>
 					<commitIdGenerationMode>full</commitIdGenerationMode>
-					<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+					<!-- Repo root is image-compressor/; module basedir is image-compressor/image-compressor/ -->
+					<dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
+
 	<profiles>
 		<profile>
 			<id>sonar</id>
@@ -387,4 +584,28 @@
 			</build>
 		</profile>
 	</profiles>
+
+	<licenses>
+		<license>
+			<name>MPL 2.0</name>
+			<url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git://github.com/mosip/image-compressor.git</connection>
+		<developerConnection>scm:git:ssh://github.com:mosip/image-compressor.git</developerConnection>
+		<url>https://github.com/mosip/image-compressor</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<developers>
+		<developer>
+			<name>MOSIP</name>
+			<email>mosip.emailnotifier@gmail.com</email>
+			<organization>io.mosip</organization>
+			<organizationUrl>https://github.com/mosip/image-compressor</organizationUrl>
+		</developer>
+	</developers>
 </project>

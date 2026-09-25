@@ -53,4 +53,46 @@ class ImageCompressionServiceTest extends ImageCompressionService {
 	protected byte[] getBirData(BIR bir) {
 		return super.getBirData(bir);
 	}
+
+	@Override
+	protected byte[] doFaceConversion(String purpose, byte[] imageData) {
+		return super.doFaceConversion(purpose, imageData);
+	}
+
+	@Override
+	protected boolean isValidBIRParams(BIR segment, BiometricType bioType, String bioSubType) {
+		return super.isValidBIRParams(segment, bioType, bioSubType);
+	}
+
+	@Override
+	protected byte[] getBDBData(io.mosip.kernel.biometrics.constant.PurposeType purposeType, BiometricType bioType,
+			String bioSubType, byte[] bdbData) {
+		return super.getBDBData(purposeType, bioType, bioSubType, bdbData);
+	}
+
+	@Override
+	protected byte[] getBiometericData(io.mosip.kernel.biometrics.constant.PurposeType purposeType,
+			BiometricType bioType, String bioSubType, String bdbData) {
+		return super.getBiometericData(purposeType, bioType, bioSubType, bdbData);
+	}
+
+	@Override
+	protected byte[] getFaceBdb(io.mosip.kernel.biometrics.constant.PurposeType purposeType, String biometricSubType,
+			String bdbData) {
+		return super.getFaceBdb(purposeType, biometricSubType, bdbData);
+	}
+
+	@Override
+	protected io.mosip.kernel.biometrics.constant.ProcessedLevelType getProcessedLevelType() {
+		return super.getProcessedLevelType();
+	}
+
+	@Override
+	protected io.mosip.kernel.biometrics.constant.PurposeType getPurposeType() {
+		return super.getPurposeType();
+	}
+
+	public Response<BiometricRecord> extract() {
+		return getExtractTemplateInfo();
+	}
 }
